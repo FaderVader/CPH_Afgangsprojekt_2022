@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "dxdC106zl8iS6V17hjAkm4hhfksi6amLoRyt/NIix5tTgRnw3mz8/K/tD/4bV8H2pzJxOBcDhEWwderKtHH0Lw==",
+  "success": true,
+  "projectFilePath": "C:\\GIT_REPOS\\cph\\CPH_Afgangsprojekt_2022\\src\\LogWatcher\\FrontEnd\\FrontEnd.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\w-jvh\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.15.1\\microsoft.visualstudio.azure.containers.tools.targets.1.15.1.nupkg.sha512"
+  ],
+  "logs": []
+}

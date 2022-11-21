@@ -1,0 +1,5 @@
+[build image from dockerfile]
+docker build -t log-store-sql:1.0.0 .
+
+[spawn container and start it]
+docker run -d --name log-store-db -p 1434:1433 log-store-sql:1.0.0
