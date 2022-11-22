@@ -1,0 +1,8 @@
+[prepare the image, based on dockerfile]
+docker build -t python-api:1.0.0 .
+
+[spawn container and start it]
+docker run -it --rm -p 8000:8000 python-api:1.0.0
+
+[fire-and-forget]
+docker run -d -p 8000:8000 python-api:1.0.0
