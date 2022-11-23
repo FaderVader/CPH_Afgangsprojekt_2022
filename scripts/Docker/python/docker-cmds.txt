@@ -1,8 +1,11 @@
+[create shared bridge/network for containers]
+docker network create jvh-net
+
 [prepare the image, based on dockerfile]
 docker build -t python-api:1.0.0 .
 
 [spawn container and start it]
-docker run -it --rm -p 8000:8000 python-api:1.0.0
+docker run -it --rm --net jvh-net -p 8000:8000 python-api:1.0.0 
 
 [fire-and-forget]
-docker run -d -p 8000:8000 python-api:1.0.0
+docker run -d --net jvh-net -p 8000:8000 python-api:1.0.0

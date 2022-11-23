@@ -99,7 +99,9 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\w-jvh\\.nuget\\packages\\": {}
+    "C:\\Users\\jakob\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
@@ -107,11 +109,16 @@
       "projectUniqueName": "C:\\GIT_REPOS\\cph\\CPH_Afgangsprojekt_2022\\src\\LogWatcher\\FrontEnd\\FrontEnd.csproj",
       "projectName": "FrontEnd",
       "projectPath": "C:\\GIT_REPOS\\cph\\CPH_Afgangsprojekt_2022\\src\\LogWatcher\\FrontEnd\\FrontEnd.csproj",
-      "packagesPath": "C:\\Users\\w-jvh\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\jakob\\.nuget\\packages\\",
       "outputPath": "C:\\GIT_REPOS\\cph\\CPH_Afgangsprojekt_2022\\src\\LogWatcher\\FrontEnd\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\w-jvh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jakob\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -148,7 +155,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -160,7 +168,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

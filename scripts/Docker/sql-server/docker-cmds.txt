@@ -1,5 +1,8 @@
+[create shared bridge/network for containers]
+docker network create jvh-net
+
 [build image from dockerfile]
 docker build -t log-store-sql:1.0.0 .
 
-[spawn container and start it]
-docker run -d --name log-store-db -p 1433:1433 log-store-sql:1.0.0
+[spawn container and start it][--name: configure python to use this as db server-name]
+docker run -d --name log-store-db --net jvh-net -p 1433:1433 log-store-sql:1.0.0 
