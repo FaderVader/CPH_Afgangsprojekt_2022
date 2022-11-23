@@ -26,9 +26,10 @@ namespace FrontEnd
 
         public async Task GetStarted()
         {
-            var sourceTest = new SourceSystem { ID = 1,  Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
+            var newSource = new SourceSystem { Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
+            await engine.AddSourceSystem(newSource);
 
-            await engine.UpdateFilesFromSourceSystem(sourceTest);
+            //await engine.UpdateFilesFromSourceSystem(sourceTest);
 
         }
 

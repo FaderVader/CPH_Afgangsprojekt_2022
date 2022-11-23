@@ -1,4 +1,5 @@
 ﻿using Domain.Database;
+using Domain.FileSystem;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,20 @@ namespace Domain
     public class Engine
     {
         private SqlConnect sqlConnect;
+        private FileLoader fileLoader;
 
         public Engine()
         {
             sqlConnect = new SqlConnect();
+            fileLoader = new FileLoader();
         }
 
 
         public async Task AddSourceSystem(SourceSystem sourceSystem)
         {
             // insert new system into db
+            var newRecord = await sqlConnect.CreateSourceSystem(sourceSystem);            
+            await UpdateFilesFromSourceSystem(newRecord);
         }
 
         public async Task UpdateFilesFromSourceSystem(SourceSystem sourceSystem)
@@ -32,26 +37,46 @@ namespace Domain
             // get list of existing LogFiles from DB for sourceSystem
             var filesInDb = await GetFilesInDB(sourceSystem);
 
+            // for each file in sourceDir
+            // if file exists in db -> remove all entries for logfile from db, remove logfile from db
+
             // get list of files already loaded in db
             var overlapFiles = filesInDb.Select(db => db.FileName).Intersect(filesInDir.Select(dir => Path.GetFileName(dir))).ToList();
             var filesToPurgeFromDB = filesInDb.Where(file => overlapFiles.Contains(file.FileName))?.ToList();
             
-            await DeleteLogFilesFromDB(filesToPurgeFromDB);
+            // delete pre-existing logfiles + loglines from db
+            await DeleteLogFilesAndLinesFromDB(filesToPurgeFromDB);
 
-
-            // for each file in sourceDir
-            // if file exists in db -> remove all entries for logfile from db, remove logfile from db
-            // else
             // add file to LogFiles db
-            // foreach line in file
-            // create and add line to LogLine db
+            var newLogFiles = new List<LogFile>();
+            var addFilesTasks = filesInDir.Select(async file =>
+            {
+                await AddLogFileToDB(sourceSystem, file);
+            });
+            await Task.WhenAll(addFilesTasks);            
         }
 
-        private async Task DeleteLogFilesFromDB(List<LogFile> filesToPurgeFromDB)
+        // foreach line in file
+        // create and add line to LogLine db
+        private async Task AddLogFileToDB(SourceSystem sourceSystem, string fileName)
+        {  
+            var logFile = new LogFile { FileName= fileName, SourceSystemID = sourceSystem.ID, SourceSystemName = sourceSystem.Name, FileHash = "" };
+
+            var logFileId = await sqlConnect.CreateLogFile(logFile);
+            if (logFileId > 0) 
+            {
+                var logLines = await GetLinesFromFile(sourceSystem, fileName, logFileId);
+                await sqlConnect.CreateLogLines(logLines);
+            }
+        }
+
+
+        private async Task DeleteLogFilesAndLinesFromDB(List<LogFile> filesToPurgeFromDB)
         {
             var deleteTasks = filesToPurgeFromDB.Select(async file =>
             {
                 await sqlConnect.DeleteLogLinesForLogFile(file);
+                await sqlConnect.DeleteLogFile(file);
             });
             await Task.WhenAll(deleteTasks);
         }
@@ -72,6 +97,14 @@ namespace Domain
         {
             var results = await sqlConnect.GetAllLogFiles(sourceSystemD);
             return results;
+        }
+
+        private async Task<List<LogLine>> GetLinesFromFile(SourceSystem source, string fileName, int logFileId)
+        {
+            var fullPath = Path.Combine(source.SourceFolder, fileName);
+            var allLogLines = await fileLoader.GetLines(fullPath, source, logFileId);
+
+            return allLogLines;
         }
     }
 }

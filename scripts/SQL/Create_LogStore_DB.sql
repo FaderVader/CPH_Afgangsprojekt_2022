@@ -38,7 +38,7 @@ IF NOT EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME
 		[LogFileID] int FOREIGN KEY REFERENCES LogFiles,
 		[TimeOfEvent] datetime,
 		[Severity] varchar (100),
-		[EventDescription] nvarchar (512),
-		[SourceModule] nvarchar (512),
-		[RawText] nvarchar (1024)
+		[EventDescription] nvarchar (1024),
+		[SourceModule] nvarchar (1024),
+		[RawText] nvarchar (2048)
 	)
