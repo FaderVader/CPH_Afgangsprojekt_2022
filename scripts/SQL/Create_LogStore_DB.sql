@@ -26,7 +26,7 @@ IF NOT EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME
 IF NOT EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SourceSystems')
 	CREATE TABLE SourceSystems (
 		[ID] int IDENTITY (1,1) PRIMARY KEY,
-		[NAME] nvarchar (255),
+		[Name] nvarchar (255),
 		[SourceFolder] nvarchar (1024),
 		[LineTemplate] nvarchar (255)
 	)
@@ -35,7 +35,7 @@ IF NOT EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME
 	CREATE TABLE LogLines (
 		[ID] bigint IDENTITY (1,1) PRIMARY KEY,
 		[SourceSystemID] int FOREIGN KEY REFERENCES SourceSystems,
-		[LogFilesID] int FOREIGN KEY REFERENCES LogFiles,
+		[LogFileID] int FOREIGN KEY REFERENCES LogFiles,
 		[TimeOfEvent] datetime,
 		[Severity] varchar (100),
 		[EventDescription] nvarchar (512),

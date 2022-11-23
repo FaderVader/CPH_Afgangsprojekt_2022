@@ -1,4 +1,4 @@
-using FrontEnd.Data;
+using Domain.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +27,7 @@ namespace FrontEnd
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<SqlConnect>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
