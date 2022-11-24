@@ -14,6 +14,18 @@ namespace Domain.Database
     {
         private const string connString = "Server=localhost;Database=LogStore;UID=sa;PWD=Jakob12345!;";
 
+        #region SourceSystem
+        public async Task<List<SourceSystem>> GetAllSourceSystems()
+        {
+            var query = "SELECT * FROM SourceSystems";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connString))
+            {
+                var result = await connection.QueryAsync<SourceSystem>(query);
+                return result.ToList(); ;
+            };
+        }
+
         public async Task<SourceSystem> CreateSourceSystem(SourceSystem sourceSystem)
         {
             var query = $"INSERT INTO SourceSystems (Name, SourceFolder, LineTemplate) VALUES (@Name, @SourceFolder, @LineTemplate)";
@@ -81,18 +93,9 @@ namespace Domain.Database
                 var result = await connection.ExecuteAsync(query);
             };
         }
+        #endregion
 
-        public async Task<List<SourceSystem>> GetAllSourceSystems()
-        {
-            var query = "SELECT * FROM SourceSystems";
-
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connString))
-            {
-                var result = await connection.QueryAsync<SourceSystem>(query);
-                return result.ToList(); ;
-            };
-        }
-
+        #region LogFiles
         /// <summary>
         /// Get list of available LogFiles from DB based on SourceSystemID.
         /// </summary>
@@ -159,7 +162,9 @@ namespace Domain.Database
                 await connection.ExecuteAsync(query);
             };
         }
+        #endregion
 
+        #region LogLines
         public async Task DeleteLogLinesForLogFile(LogFile logFile)
         {
             var query = $"DELETE FROM LogLines WHERE SourceSystemID = {logFile.SourceSystemID} AND LogFileID = {logFile.ID}";
@@ -169,6 +174,9 @@ namespace Domain.Database
             };
         }
 
+        /// <summary>
+        /// Will return number of rows inserted
+        /// </summary>
         public async Task<int> CreateLogLines(List<LogLine> logLines)
         {
             var query = "INSERT INTO LogLines (SourceSystemID, LogFileId, TimeOfEvent, Severity, EventDescription, SourceModule, RawText) " +
@@ -210,5 +218,6 @@ namespace Domain.Database
                 throw;
             }
         }
+        #endregion 
     }
 }

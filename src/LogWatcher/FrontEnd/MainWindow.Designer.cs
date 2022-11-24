@@ -189,6 +189,7 @@
             this.btn_UpdateSource.TabIndex = 5;
             this.btn_UpdateSource.Text = "Opdater";
             this.btn_UpdateSource.UseVisualStyleBackColor = true;
+            this.btn_UpdateSource.Click += new System.EventHandler(this.btn_UpdateSource_Click);
             // 
             // gb_Search
             // 

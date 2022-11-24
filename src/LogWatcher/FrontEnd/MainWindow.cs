@@ -89,7 +89,6 @@ namespace FrontEnd
             }
         }
       
-
         private async void btn_DeleteSource_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItem == null) return;
@@ -98,7 +97,13 @@ namespace FrontEnd
             await engine.RemoveSourceSystem(SelectedSourceSystem);
 
             await PopulateSourceSystems();
+        }
 
+        private async void btn_UpdateSource_Click(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItem == null) return;
+            SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
+            await engine.UpdateSourceSystem(SelectedSourceSystem);
         }
         #endregion
 
@@ -141,6 +146,5 @@ namespace FrontEnd
             return dialogResult;
         }
         #endregion
-
     }
 }

@@ -17,10 +17,11 @@ namespace Domain.FileSystem
 
             lines.ToList().ForEach(line =>
             {
-                var timeStamp = line.Substring(0, 33);
-                var severity = line.Substring(34, 6);
-                var description = line.Substring(40);
-                var module = "";
+                var parsed = LineParser(line);
+                var timeStamp = parsed.TimeStamp;
+                var severity = parsed.Severity;
+                var description = parsed.Description;
+                var module = parsed.Module;
 
                 var isValidLine = DateTime.TryParse(timeStamp, out _);
 
@@ -42,6 +43,17 @@ namespace Domain.FileSystem
             });            
 
             return logLines;
+        }
+
+        private static (string TimeStamp, string Severity, string Description, string Module) LineParser(string line)
+        {
+            var timeStamp = line.Substring(0, 33);
+            var severity = line.Substring(34, 6);
+            var description = line.Substring(40);
+            var module = "";
+
+            (string, string, string, string) result = (timeStamp, severity, description, module);
+            return result;
         }
     }
 }

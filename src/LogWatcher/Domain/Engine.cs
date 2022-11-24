@@ -22,6 +22,10 @@ namespace Domain
         }
 
         #region public methods
+
+        /// <summary>
+        /// Retrieve all SourceSystems from DB
+        /// </summary>
         public async Task<List<SourceSystem>> GetAllSourceSystems()
         {
             var ssList = new List<SourceSystem>();
@@ -29,6 +33,9 @@ namespace Domain
             return ssList;
         }
 
+        /// <summary>
+        /// Add new SourceSystem to database
+        /// </summary>
         public async Task<SourceSystem> AddSourceSystem(SourceSystem sourceSystem)
         {
             // insert new system into db
@@ -38,6 +45,9 @@ namespace Domain
             return newRecord;
         }
 
+        /// <summary>
+        /// Remove SourceSystem and associated logfiles and lines.
+        /// </summary>
         public async Task RemoveSourceSystem(SourceSystem sourceSystem)
         {
             // first get loglines to remove from DB
@@ -50,6 +60,9 @@ namespace Domain
             await sqlConnect.DeleteSourceSystem(sourceSystem);
         }
 
+        /// <summary>
+        /// Update logfiles and -lines for SourceSystem
+        /// </summary>
         public async Task UpdateSourceSystem(SourceSystem sourceSystem)
         {
             var updated = await sqlConnect.UpdateSourceSystem(sourceSystem);
@@ -57,6 +70,9 @@ namespace Domain
             await UpdateFilesFromSourceSystem(updated);
         }
 
+        /// <summary>
+        /// Refresh logfiles and -lines for SourceSystem
+        /// </summary>
         public async Task UpdateFilesFromSourceSystem(SourceSystem sourceSystem)
         {
             // get list of all files in sourceDir
@@ -86,6 +102,13 @@ namespace Domain
         #endregion
 
         #region private methods
+        
+        // database interaction
+        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
+        {
+            var results = await sqlConnect.GetAllLogFiles(sourceSystem);
+            return results;
+        }
         private async Task AddLogFileToDB(SourceSystem sourceSystem, string fileName)
         {  
             var logFile = new LogFile { FileName= fileName, SourceSystemID = sourceSystem.ID, SourceSystemName = sourceSystem.Name, FileHash = "" };
@@ -108,12 +131,7 @@ namespace Domain
             await Task.WhenAll(deleteTasks);
         }
 
-        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
-        {
-            var results = await sqlConnect.GetAllLogFiles(sourceSystem);
-            return results;
-        }
-
+        // filesystem interaction
         private async Task<List<string>> GetFilesInDirectory(string sourcePath)
         {
             var results = new List<string>();
