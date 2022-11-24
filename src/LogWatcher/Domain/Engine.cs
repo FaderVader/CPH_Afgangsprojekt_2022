@@ -29,11 +29,13 @@ namespace Domain
             return ssList;
         }
 
-        public async Task AddSourceSystem(SourceSystem sourceSystem)
+        public async Task<SourceSystem> AddSourceSystem(SourceSystem sourceSystem)
         {
             // insert new system into db
             var newRecord = await sqlConnect.CreateSourceSystem(sourceSystem);            
             await UpdateFilesFromSourceSystem(newRecord);
+
+            return newRecord;
         }
 
         public async Task UpdateSourceSystem(SourceSystem sourceSystem)

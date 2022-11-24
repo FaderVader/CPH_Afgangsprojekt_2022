@@ -169,6 +169,7 @@
             this.btn_AddNewSource.TabIndex = 3;
             this.btn_AddNewSource.Text = "Ny";
             this.btn_AddNewSource.UseVisualStyleBackColor = true;
+            this.btn_AddNewSource.Click += new System.EventHandler(this.btn_AddNewSource_Click);
             // 
             // btn_DeleteSource
             // 
