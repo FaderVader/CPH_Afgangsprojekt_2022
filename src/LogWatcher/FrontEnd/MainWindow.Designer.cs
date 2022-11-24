@@ -81,6 +81,7 @@
             this.lb_SourceSystemList.ScrollAlwaysVisible = true;
             this.lb_SourceSystemList.Size = new System.Drawing.Size(318, 289);
             this.lb_SourceSystemList.TabIndex = 0;
+            this.lb_SourceSystemList.SelectedIndexChanged += new System.EventHandler(this.lb_SourceSystemList_SelectedIndexChanged);
             // 
             // tbc_SourceFocus
             // 

@@ -2,51 +2,55 @@
 using Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 namespace FrontEnd
 {
     public partial class MainWindow : Form
     {
-        private Engine engine;
+
         public MainWindow()
         {
             InitializeComponent();
             engine = new Engine();
 
             PopulateSourceSystems();
+            EnableSourceModifierButtons(false);
         }
 
+        #region fields
+        private Engine engine;
+        #endregion
+
+        #region properties
         public List<SourceSystem> SourceSystems { get; set; }
-        public SourceSystem SelectedSourceSystem { get; private set; }
 
-        public async Task GetStarted()
+        private SourceSystem selectedSourceSystem;
+        public SourceSystem SelectedSourceSystem
         {
-            //var newSource = new SourceSystem { Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
-            //await engine.AddSourceSystem(newSource);
-
-            //var existingSource = new SourceSystem { ID = 1, Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
-            //await engine.UpdateFilesFromSourceSystem(existingSource);
-
+            get { return selectedSourceSystem; }
+            private set
+            {
+                selectedSourceSystem = value;
+                var enable = selectedSourceSystem == null ? false : true;
+                EnableSourceModifierButtons(enable);
+            }
         }
+        #endregion
 
+        #region methods
         public async Task PopulateSourceSystems()
         {
             SourceSystems = await engine.GetAllSourceSystems();
             lb_SourceSystemList.DisplayMember = "Name";
             lb_SourceSystemList.DataSource = SourceSystems;
         }
+        #endregion
 
-        #region button handlers
+        #region button event-handlers
         private void btn_SourceFocus_Browse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -82,13 +86,13 @@ namespace FrontEnd
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    SourceSystem newSource = new SourceSystem { Name= value };
+                    SourceSystem newSource = new SourceSystem { Name = value };
                     await engine.AddSourceSystem(newSource);
                     await PopulateSourceSystems();
                 }
             }
         }
-      
+
         private async void btn_DeleteSource_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItem == null) return;
@@ -105,9 +109,32 @@ namespace FrontEnd
             SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
             await engine.UpdateSourceSystem(SelectedSourceSystem);
         }
+
+        private void lb_SourceSystemList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItem == null)
+            {
+                SelectedSourceSystem = null;
+                return;
+            }
+
+            if (lb_SourceSystemList.SelectedItem != SelectedSourceSystem)
+            {
+                EnableSourceModifierButtons(false);
+            }
+        }
+
         #endregion
 
         #region helpers
+        private void EnableSourceModifierButtons(bool enable)
+        {
+            btn_DeleteSource.Enabled = enable;
+            btn_SourceFocus_Browse.Enabled = enable;
+            btn_UpdateSource.Enabled = enable;
+            btn_SourceFocus_DirectorySave.Enabled = enable;
+        }
+
         public static DialogResult InputBox(string title, string promptText, ref string value)
         {
             Form form = new Form();
