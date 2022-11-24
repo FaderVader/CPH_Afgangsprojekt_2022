@@ -148,24 +148,6 @@ namespace Domain.Database
             {
                 using (IDbConnection connection = new SqlConnection(connString))
                 {
-                    /*var createTasks = logLines.Select(async line =>
-                    {
-                        var parameters = new DynamicParameters();
-                        parameters.Add("SourceSystemID", line.SourceSystemID, DbType.Int32);
-                        parameters.Add("LogFileId", line.LogFileID, DbType.Int32);
-                        parameters.Add("TimeOfEvent", line.TimeOfEvent, DbType.DateTime);
-                        parameters.Add("Severity", line.Severity, DbType.String);
-                        parameters.Add("EventDescription", line.EventDescription, DbType.String);
-                        parameters.Add("SourceModule", line.SourceModule, DbType.String);
-                        parameters.Add("RawText", line.Rawtext, DbType.String);
-
-                        var results = await connection.ExecuteAsync(query, parameters);
-
-                        lineCounter++;
-
-                    });
-                    await Task.WhenAll(createTasks);*/
-
                     foreach (var line in logLines)
                     {
                         var parameters = new DynamicParameters();
@@ -181,9 +163,7 @@ namespace Domain.Database
                         parameters.Add("SourceModule", source, DbType.String);
 
                         var raw = line.Rawtext.Substring(0, Math.Min(line.Rawtext.Length, 2040));
-                        parameters.Add("RawText", raw, DbType.String);
-
-                        
+                        parameters.Add("RawText", raw, DbType.String);                        
 
                         await connection.ExecuteAsync(query, parameters);
                         lineCounter++;

@@ -51,13 +51,12 @@ namespace Domain
             var newLogFiles = new List<LogFile>();
             var addFilesTasks = filesInDir.Select(async file =>
             {
-                await AddLogFileToDB(sourceSystem, file);
+
+                await AddLogFileToDB(sourceSystem, Path.GetFileName(file));
             });
             await Task.WhenAll(addFilesTasks);            
         }
 
-        // foreach line in file
-        // create and add line to LogLine db
         private async Task AddLogFileToDB(SourceSystem sourceSystem, string fileName)
         {  
             var logFile = new LogFile { FileName= fileName, SourceSystemID = sourceSystem.ID, SourceSystemName = sourceSystem.Name, FileHash = "" };
@@ -69,7 +68,6 @@ namespace Domain
                 await sqlConnect.CreateLogLines(logLines);
             }
         }
-
 
         private async Task DeleteLogFilesAndLinesFromDB(List<LogFile> filesToPurgeFromDB)
         {
@@ -93,9 +91,9 @@ namespace Domain
             return results;
         }
 
-        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystemD)
+        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
         {
-            var results = await sqlConnect.GetAllLogFiles(sourceSystemD);
+            var results = await sqlConnect.GetAllLogFiles(sourceSystem);
             return results;
         }
 
