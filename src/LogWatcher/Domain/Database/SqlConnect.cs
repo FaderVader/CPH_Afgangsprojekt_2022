@@ -49,6 +49,28 @@ namespace Domain.Database
             };
         }
 
+        public async Task<SourceSystem> UpdateSourceSystem(SourceSystem sourceSystem)
+        {
+            var existingSystems = await GetAllSourceSystems();
+            var matchedSystem = existingSystems.Where(system => system.ID == sourceSystem.ID).FirstOrDefault();
+            if (matchedSystem != null)
+            {
+                var query = $"Update SourceSystems SET Name = @Name, SourceFolder = @SourceFolder, LineTemplate = @LineTemplate WHERE ID = @ID";
+                var parameters = new DynamicParameters();
+                parameters.Add("ID", sourceSystem.ID, DbType.Int32);
+                parameters.Add("Name", sourceSystem.Name, DbType.String);
+                parameters.Add("SourceFolder", sourceSystem.SourceFolder, DbType.String);
+                parameters.Add("LineTemplate", sourceSystem.LineTemplate, DbType.String);
+
+                using (IDbConnection connection = new SqlConnection(connString))
+                {
+                    var result = await connection.ExecuteAsync(query, parameters);
+                    return sourceSystem;
+                };
+            }
+            return matchedSystem;
+        }
+
         public async Task<List<SourceSystem>> GetAllSourceSystems()
         {
             var query = "SELECT * FROM SourceSystems";

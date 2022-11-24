@@ -21,6 +21,7 @@ namespace Domain
             fileLoader = new FileLoader();
         }
 
+        #region public methods
         public async Task<List<SourceSystem>> GetAllSourceSystems()
         {
             var ssList = new List<SourceSystem>();
@@ -33,6 +34,13 @@ namespace Domain
             // insert new system into db
             var newRecord = await sqlConnect.CreateSourceSystem(sourceSystem);            
             await UpdateFilesFromSourceSystem(newRecord);
+        }
+
+        public async Task UpdateSourceSystem(SourceSystem sourceSystem)
+        {
+            var updated = await sqlConnect.UpdateSourceSystem(sourceSystem);
+
+            await UpdateFilesFromSourceSystem(updated);
         }
 
         public async Task UpdateFilesFromSourceSystem(SourceSystem sourceSystem)
@@ -57,12 +65,13 @@ namespace Domain
             var newLogFiles = new List<LogFile>();
             var addFilesTasks = filesInDir.Select(async file =>
             {
-
                 await AddLogFileToDB(sourceSystem, Path.GetFileName(file));
             });
             await Task.WhenAll(addFilesTasks);            
         }
+        #endregion
 
+        #region private methods
         private async Task AddLogFileToDB(SourceSystem sourceSystem, string fileName)
         {  
             var logFile = new LogFile { FileName= fileName, SourceSystemID = sourceSystem.ID, SourceSystemName = sourceSystem.Name, FileHash = "" };
@@ -110,5 +119,6 @@ namespace Domain
 
             return allLogLines;
         }
+        #endregion 
     }
 }

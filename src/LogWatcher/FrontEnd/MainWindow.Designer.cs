@@ -31,7 +31,11 @@
             this.lb_SourceSystemList = new System.Windows.Forms.ListBox();
             this.tbc_SourceFocus = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btn_SourceFocus_Browse = new System.Windows.Forms.Button();
+            this.btn_SourceFocus_DirectorySave = new System.Windows.Forms.Button();
+            this.tb_SourceFocus_Directory = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tb_SourceFocus_LineTemplate = new System.Windows.Forms.TextBox();
             this.btn_SelectSource = new System.Windows.Forms.Button();
             this.btn_AddNewSource = new System.Windows.Forms.Button();
             this.btn_DeleteSource = new System.Windows.Forms.Button();
@@ -58,10 +62,6 @@
             this.tb_SelectedLine = new System.Windows.Forms.TextBox();
             this.btn_OpenLogFile = new System.Windows.Forms.Button();
             this.lbl_SelectedLine = new System.Windows.Forms.Label();
-            this.tb_SourceFocus_Directory = new System.Windows.Forms.TextBox();
-            this.btn_SourceFocus_DirectorySave = new System.Windows.Forms.Button();
-            this.btn_SourceFocus_Browse = new System.Windows.Forms.Button();
-            this.tb_SourceFocus_LineTemplate = new System.Windows.Forms.TextBox();
             this.tbc_SourceFocus.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -105,6 +105,34 @@
             this.tabPage1.Text = "Kildefolder";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btn_SourceFocus_Browse
+            // 
+            this.btn_SourceFocus_Browse.Location = new System.Drawing.Point(6, 35);
+            this.btn_SourceFocus_Browse.Name = "btn_SourceFocus_Browse";
+            this.btn_SourceFocus_Browse.Size = new System.Drawing.Size(59, 23);
+            this.btn_SourceFocus_Browse.TabIndex = 2;
+            this.btn_SourceFocus_Browse.Text = "Browse";
+            this.btn_SourceFocus_Browse.UseVisualStyleBackColor = true;
+            this.btn_SourceFocus_Browse.Click += new System.EventHandler(this.btn_SourceFocus_Browse_Click);
+            // 
+            // btn_SourceFocus_DirectorySave
+            // 
+            this.btn_SourceFocus_DirectorySave.Location = new System.Drawing.Point(229, 53);
+            this.btn_SourceFocus_DirectorySave.Name = "btn_SourceFocus_DirectorySave";
+            this.btn_SourceFocus_DirectorySave.Size = new System.Drawing.Size(75, 23);
+            this.btn_SourceFocus_DirectorySave.TabIndex = 1;
+            this.btn_SourceFocus_DirectorySave.Text = "Gem";
+            this.btn_SourceFocus_DirectorySave.UseVisualStyleBackColor = true;
+            this.btn_SourceFocus_DirectorySave.Click += new System.EventHandler(this.btn_SourceFocus_DirectorySave_Click);
+            // 
+            // tb_SourceFocus_Directory
+            // 
+            this.tb_SourceFocus_Directory.Location = new System.Drawing.Point(6, 6);
+            this.tb_SourceFocus_Directory.Name = "tb_SourceFocus_Directory";
+            this.tb_SourceFocus_Directory.Size = new System.Drawing.Size(298, 23);
+            this.tb_SourceFocus_Directory.TabIndex = 0;
+            this.tb_SourceFocus_Directory.Text = "Vælg folder ...";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tb_SourceFocus_LineTemplate);
@@ -116,6 +144,13 @@
             this.tabPage2.Text = "Linje skabelon";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // tb_SourceFocus_LineTemplate
+            // 
+            this.tb_SourceFocus_LineTemplate.Location = new System.Drawing.Point(9, 11);
+            this.tb_SourceFocus_LineTemplate.Name = "tb_SourceFocus_LineTemplate";
+            this.tb_SourceFocus_LineTemplate.Size = new System.Drawing.Size(295, 23);
+            this.tb_SourceFocus_LineTemplate.TabIndex = 0;
+            // 
             // btn_SelectSource
             // 
             this.btn_SelectSource.Location = new System.Drawing.Point(63, 348);
@@ -124,6 +159,7 @@
             this.btn_SelectSource.TabIndex = 2;
             this.btn_SelectSource.Text = "Vælg";
             this.btn_SelectSource.UseVisualStyleBackColor = true;
+            this.btn_SelectSource.Click += new System.EventHandler(this.btn_SelectSource_Click);
             // 
             // btn_AddNewSource
             // 
@@ -367,39 +403,6 @@
             this.lbl_SelectedLine.Size = new System.Drawing.Size(58, 15);
             this.lbl_SelectedLine.TabIndex = 12;
             this.lbl_SelectedLine.Text = "Valgt linje";
-            // 
-            // tb_SourceFocus_Directory
-            // 
-            this.tb_SourceFocus_Directory.Location = new System.Drawing.Point(6, 6);
-            this.tb_SourceFocus_Directory.Name = "tb_SourceFocus_Directory";
-            this.tb_SourceFocus_Directory.Size = new System.Drawing.Size(298, 23);
-            this.tb_SourceFocus_Directory.TabIndex = 0;
-            this.tb_SourceFocus_Directory.Text = "Vælg folder ...";
-            // 
-            // btn_SourceFocus_DirectorySave
-            // 
-            this.btn_SourceFocus_DirectorySave.Location = new System.Drawing.Point(229, 53);
-            this.btn_SourceFocus_DirectorySave.Name = "btn_SourceFocus_DirectorySave";
-            this.btn_SourceFocus_DirectorySave.Size = new System.Drawing.Size(75, 23);
-            this.btn_SourceFocus_DirectorySave.TabIndex = 1;
-            this.btn_SourceFocus_DirectorySave.Text = "Gem";
-            this.btn_SourceFocus_DirectorySave.UseVisualStyleBackColor = true;
-            // 
-            // btn_SourceFocus_Browse
-            // 
-            this.btn_SourceFocus_Browse.Location = new System.Drawing.Point(6, 35);
-            this.btn_SourceFocus_Browse.Name = "btn_SourceFocus_Browse";
-            this.btn_SourceFocus_Browse.Size = new System.Drawing.Size(59, 23);
-            this.btn_SourceFocus_Browse.TabIndex = 2;
-            this.btn_SourceFocus_Browse.Text = "Browse";
-            this.btn_SourceFocus_Browse.UseVisualStyleBackColor = true;
-            // 
-            // tb_SourceFocus_LineTemplate
-            // 
-            this.tb_SourceFocus_LineTemplate.Location = new System.Drawing.Point(9, 11);
-            this.tb_SourceFocus_LineTemplate.Name = "tb_SourceFocus_LineTemplate";
-            this.tb_SourceFocus_LineTemplate.Size = new System.Drawing.Size(295, 23);
-            this.tb_SourceFocus_LineTemplate.TabIndex = 0;
             // 
             // MainWindow
             // 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,8 @@ namespace FrontEnd
             PopulateSourceSystems();
         }
 
-        private async Task InitializeWindow()
-        {
-
-        }
-
         public List<SourceSystem> SourceSystems { get; set; }
+        public SourceSystem SelectedSourceSystem { get; private set; }
 
         public async Task GetStarted()
         {
@@ -47,5 +44,35 @@ namespace FrontEnd
             lb_SourceSystemList.DisplayMember = "Name";
             lb_SourceSystemList.DataSource = SourceSystems;
         }
+
+        #region button handlers
+        private void btn_SourceFocus_Browse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                tb_SourceFocus_Directory.Text = dialog.SelectedPath;
+            }
+        }
+
+        private async void btn_SourceFocus_DirectorySave_Click(object sender, EventArgs e)
+        {
+            var userPath = tb_SourceFocus_Directory.Text;
+            if (Directory.Exists(userPath) && SelectedSourceSystem != null)
+            {
+                SelectedSourceSystem.SourceFolder = userPath;
+                await engine.UpdateSourceSystem(SelectedSourceSystem);
+            }
+        }
+
+        private void btn_SelectSource_Click(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItem == null) return;
+
+            SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
+            tb_SourceFocus_Directory.Text = SelectedSourceSystem.SourceFolder;
+            tb_SourceFocus_LineTemplate.Text = SelectedSourceSystem.LineTemplate;
+        }
+        #endregion
     }
 }
