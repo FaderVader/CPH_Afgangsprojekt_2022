@@ -18,23 +18,34 @@ namespace FrontEnd
         public MainWindow()
         {
             InitializeComponent();
-
             engine = new Engine();
 
-            GetStarted();
+            PopulateSourceSystems();
         }
+
+        private async Task InitializeWindow()
+        {
+
+        }
+
+        public List<SourceSystem> SourceSystems { get; set; }
 
         public async Task GetStarted()
         {
             //var newSource = new SourceSystem { Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
             //await engine.AddSourceSystem(newSource);
 
-            var existingSource = new SourceSystem { ID = 1, Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
-            await engine.UpdateFilesFromSourceSystem(existingSource);
+            //var existingSource = new SourceSystem { ID = 1, Name = "GalaxySiteSelector", SourceFolder = @"C:\temp\logfiles", LineTemplate = "" };
+            //await engine.UpdateFilesFromSourceSystem(existingSource);
 
         }
 
-
-
+        public async Task PopulateSourceSystems()
+        {
+            SourceSystems = await engine.GetAllSourceSystems();
+            lb_SourceSystemList.Items.Clear();
+            lb_SourceSystemList.DisplayMember = "Name";
+            lb_SourceSystemList.DataSource = SourceSystems;
+        }
     }
 }

@@ -58,7 +58,6 @@ namespace Domain.Database
                 var result = await connection.QueryAsync<SourceSystem>(query);
                 return result.ToList(); ;
             };
-
         }
 
         /// <summary>

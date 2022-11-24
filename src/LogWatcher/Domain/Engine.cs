@@ -21,6 +21,12 @@ namespace Domain
             fileLoader = new FileLoader();
         }
 
+        public async Task<List<SourceSystem>> GetAllSourceSystems()
+        {
+            var ssList = new List<SourceSystem>();
+            ssList = await sqlConnect.GetAllSourceSystems();
+            return ssList;
+        }
 
         public async Task AddSourceSystem(SourceSystem sourceSystem)
         {
