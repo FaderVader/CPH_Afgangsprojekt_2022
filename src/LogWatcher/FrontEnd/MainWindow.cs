@@ -11,7 +11,6 @@ namespace FrontEnd
 {
     public partial class MainWindow : Form
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -133,6 +132,7 @@ namespace FrontEnd
             btn_SourceFocus_Browse.Enabled = enable;
             btn_UpdateSource.Enabled = enable;
             btn_SourceFocus_DirectorySave.Enabled = enable;
+            gb_Search.Enabled = enable;
         }
 
         public static DialogResult InputBox(string title, string promptText, ref string value)
@@ -172,6 +172,42 @@ namespace FrontEnd
             value = textBox.Text;
             return dialogResult;
         }
+
+        public static DateTime ComposeTimeElements((DateTime YearMonthDay, int Hour, int Min) dateHourMin)
+        {
+            var _year = dateHourMin.YearMonthDay.Year;
+            var _month = dateHourMin.YearMonthDay.Month;
+            var _day = dateHourMin.YearMonthDay.Day;
+            var _resultTime = new DateTime(_year, _month, _day, dateHourMin.Hour, dateHourMin.Min, 0);
+
+            return _resultTime;
+        }
+
+        public SearchSet BuildSearchSet()
+        {
+            var searchSet = new SearchSet();
+
+            foreach (var element in lb_SourceSystemList.SelectedItems)
+            {
+                searchSet.SourceSystems.Add((SourceSystem)element);
+            }
+
+            (DateTime YearMonthDay, int Hour, int Min) start = (dt_DayStart.Value, (int)nud_StartHours.Value, (int)nud_StartMin.Value);
+            (DateTime YearMonthDay, int Hour, int Min) end = (dt_DayEnd.Value, (int)nud_EndHours.Value, (int)nud_EndMin.Value);
+
+            searchSet.SearchPeriod = (ComposeTimeElements(start), ComposeTimeElements(end));
+
+            searchSet.KeyWordList = tb_SearchTerms.Text.Trim();
+
+            return searchSet;
+        } 
         #endregion
+
+        private void btn_ExecuteSearch_Click(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItems.Count < 1) return;
+
+            var result = BuildSearchSet();        
+        }
     }
 }

@@ -79,6 +79,7 @@
             this.lb_SourceSystemList.Location = new System.Drawing.Point(12, 53);
             this.lb_SourceSystemList.Name = "lb_SourceSystemList";
             this.lb_SourceSystemList.ScrollAlwaysVisible = true;
+            this.lb_SourceSystemList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lb_SourceSystemList.Size = new System.Drawing.Size(318, 289);
             this.lb_SourceSystemList.TabIndex = 0;
             this.lb_SourceSystemList.SelectedIndexChanged += new System.EventHandler(this.lb_SourceSystemList_SelectedIndexChanged);
@@ -260,6 +261,7 @@
             this.btn_ExecuteSearch.TabIndex = 10;
             this.btn_ExecuteSearch.Text = "Søg nu";
             this.btn_ExecuteSearch.UseVisualStyleBackColor = true;
+            this.btn_ExecuteSearch.Click += new System.EventHandler(this.btn_ExecuteSearch_Click);
             // 
             // lbl_PeriodEnd
             // 
@@ -273,6 +275,11 @@
             // nud_EndMin
             // 
             this.nud_EndMin.Location = new System.Drawing.Point(159, 390);
+            this.nud_EndMin.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
             this.nud_EndMin.Name = "nud_EndMin";
             this.nud_EndMin.Size = new System.Drawing.Size(120, 23);
             this.nud_EndMin.TabIndex = 8;
