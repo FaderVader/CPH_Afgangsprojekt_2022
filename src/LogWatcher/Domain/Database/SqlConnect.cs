@@ -71,6 +71,17 @@ namespace Domain.Database
             return matchedSystem;
         }
 
+        public async Task DeleteSourceSystem(SourceSystem sourceSystem)
+        {
+            var id = sourceSystem.ID;
+            var query = $"DELETE FROM SourceSystems WHERE ID = {id};";
+
+            using (IDbConnection connection = new SqlConnection(connString))
+            {
+                var result = await connection.ExecuteAsync(query);
+            };
+        }
+
         public async Task<List<SourceSystem>> GetAllSourceSystems()
         {
             var query = "SELECT * FROM SourceSystems";

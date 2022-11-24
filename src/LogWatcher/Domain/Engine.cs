@@ -38,6 +38,18 @@ namespace Domain
             return newRecord;
         }
 
+        public async Task RemoveSourceSystem(SourceSystem sourceSystem)
+        {
+            // first get loglines to remove from DB
+            var linesToDelete = await GetFilesInDB(sourceSystem);
+
+            // then remove logfiles and lines
+            await DeleteLogFilesAndLinesFromDB(linesToDelete);
+
+            // then remove sourceSystem
+            await sqlConnect.DeleteSourceSystem(sourceSystem);
+        }
+
         public async Task UpdateSourceSystem(SourceSystem sourceSystem)
         {
             var updated = await sqlConnect.UpdateSourceSystem(sourceSystem);
@@ -96,6 +108,12 @@ namespace Domain
             await Task.WhenAll(deleteTasks);
         }
 
+        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
+        {
+            var results = await sqlConnect.GetAllLogFiles(sourceSystem);
+            return results;
+        }
+
         private async Task<List<string>> GetFilesInDirectory(string sourcePath)
         {
             var results = new List<string>();
@@ -105,12 +123,6 @@ namespace Domain
             var fileTask = await Task.Run(() => { return Directory.GetFiles(sourcePath); });
             results = fileTask.ToList();            
 
-            return results;
-        }
-
-        private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
-        {
-            var results = await sqlConnect.GetAllLogFiles(sourceSystem);
             return results;
         }
 

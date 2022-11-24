@@ -42,7 +42,6 @@ namespace FrontEnd
         public async Task PopulateSourceSystems()
         {
             SourceSystems = await engine.GetAllSourceSystems();
-            //lb_SourceSystemList.Items.Clear();
             lb_SourceSystemList.DisplayMember = "Name";
             lb_SourceSystemList.DataSource = SourceSystems;
         }
@@ -75,7 +74,6 @@ namespace FrontEnd
             tb_SourceFocus_Directory.Text = SelectedSourceSystem.SourceFolder;
             tb_SourceFocus_LineTemplate.Text = SelectedSourceSystem.LineTemplate;
         }
-        #endregion
 
         private async void btn_AddNewSource_Click(object sender, EventArgs e)
         {
@@ -90,7 +88,21 @@ namespace FrontEnd
                 }
             }
         }
+      
 
+        private async void btn_DeleteSource_Click(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItem == null) return;
+
+            SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
+            await engine.RemoveSourceSystem(SelectedSourceSystem);
+
+            await PopulateSourceSystems();
+
+        }
+        #endregion
+
+        #region helpers
         public static DialogResult InputBox(string title, string promptText, ref string value)
         {
             Form form = new Form();
@@ -128,5 +140,7 @@ namespace FrontEnd
             value = textBox.Text;
             return dialogResult;
         }
+        #endregion
+
     }
 }

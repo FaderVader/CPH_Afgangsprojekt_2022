@@ -179,6 +179,7 @@
             this.btn_DeleteSource.TabIndex = 4;
             this.btn_DeleteSource.Text = "Slet";
             this.btn_DeleteSource.UseVisualStyleBackColor = true;
+            this.btn_DeleteSource.Click += new System.EventHandler(this.btn_DeleteSource_Click);
             // 
             // btn_UpdateSource
             // 
