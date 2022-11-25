@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +20,8 @@ namespace FrontEnd
 
             PopulateSourceSystems();
             EnableSourceModifierButtons(false);
+
+            Test();
         }
 
         #region fields
@@ -123,6 +127,13 @@ namespace FrontEnd
             }
         }
 
+        private void btn_ExecuteSearch_Click(object sender, EventArgs e)
+        {
+            if (lb_SourceSystemList.SelectedItems.Count < 1) return;
+
+            var result = BuildSearchSet();
+        }
+
         #endregion
 
         #region helpers
@@ -200,14 +211,25 @@ namespace FrontEnd
             searchSet.KeyWordList = tb_SearchTerms.Text.Trim();
 
             return searchSet;
-        } 
+        }
         #endregion
 
-        private void btn_ExecuteSearch_Click(object sender, EventArgs e)
+        private async void Test()
         {
-            if (lb_SourceSystemList.SelectedItems.Count < 1) return;
+            using (var client = new HttpClient())
+            {
+                // ref: https://www.dotnetfunda.com/articles/show/2341/crud-operation-using-web-api-and-windows-application
 
-            var result = BuildSearchSet();        
+                // GET
+                var response = await client.GetAsync("http://127.0.0.1:8000/api");
+                var content = await response.Content.ReadAsStringAsync();
+
+                // POST
+                var stringForApi = "{\"name\":\"Foo\",\"description\":\"An optional description\",\"price\":45.3,\"tax\":3.5}";
+                var test = new StringContent(stringForApi, Encoding.UTF8, "application/json");
+                var result = await client.PostAsync("http://localhost:8000/items", test);
+                var content2 = await result.Content.ReadAsStringAsync();
+            }
         }
     }
 }
