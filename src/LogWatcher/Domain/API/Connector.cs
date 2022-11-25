@@ -25,7 +25,7 @@ namespace Domain.API
 
         public async Task<string> SendSearch(SearchSet searchSet)
         {
-            var endpoint = "items";
+            var endpoint = "searchset";
 
             using (var client = new HttpClient())
             {
