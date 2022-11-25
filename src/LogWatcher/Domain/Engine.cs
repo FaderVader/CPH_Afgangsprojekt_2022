@@ -1,4 +1,5 @@
-﻿using Domain.Database;
+﻿using Domain.API;
+using Domain.Database;
 using Domain.FileSystem;
 using Domain.Models;
 using System;
@@ -14,11 +15,13 @@ namespace Domain
     {
         private SqlConnect sqlConnect;
         private FileLoader fileLoader;
+        private Connector connector;
 
         public Engine()
         {
             sqlConnect = new SqlConnect();
             fileLoader = new FileLoader();
+            connector = new Connector();
         }
 
         #region public methods
@@ -98,6 +101,12 @@ namespace Domain
                 await AddLogFileToDB(sourceSystem, Path.GetFileName(file));
             });
             await Task.WhenAll(addFilesTasks);            
+        }
+
+        public async Task SendQueryToParser(SearchSet searchSet)
+        {            
+            // TODO: should we await response as confirmation of query receieved ?
+            await connector.SendSearch(searchSet);
         }
         #endregion
 
