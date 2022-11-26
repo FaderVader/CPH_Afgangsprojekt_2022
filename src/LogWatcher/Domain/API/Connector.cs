@@ -25,7 +25,7 @@ namespace Domain.API
 
         public async Task<string> SendSearch(SearchSet searchSet)
         {
-            var endpoint = "searchset";
+            var endpoint = "search";
 
             using (var client = new HttpClient())
             {
@@ -34,7 +34,7 @@ namespace Domain.API
                 var result = await client.PostAsync($"{uri}/{endpoint}", query); // http://localhost:8000/items
                 var content = await result.Content.ReadAsStringAsync();
 
-                return content;
+                 return content;
             }
         }
     }
