@@ -1,4 +1,5 @@
 from QueryParser import QueryParser
+from Types import SearchSet
 import cmd
 import sys
 from os import path as check_path
@@ -9,16 +10,18 @@ class Shell(cmd.Cmd):
     """
     Main entry point for LogParser. Starts the interactive query-shell.
     """
-    def __init__(self):
+    def __init__(self, searchSet: SearchSet):
         super().__init__()       
         print("Loading all log-files ....")
         self.prompt = "LogParser> "
 
-        self.queryParser = QueryParser()
+        self.searchSet = searchSet
+
+        self.queryParser = QueryParser(searchSet)
         self.init_vars()
 
         # always show help-text on startup
-        self.show_help()
+        # self.show_help()
 
     def init_vars(self):
         """

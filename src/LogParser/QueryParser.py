@@ -1,4 +1,5 @@
 from Query import Query
+from Types import SearchSet
 import json
 import inspect
 
@@ -8,10 +9,10 @@ class QueryParser:
     """
     Frontend for queries. 
     """
-    def __init__(self):
+    def __init__(self, searchSet: SearchSet):
         # dict of supported syntax
         self.query_methods = {'STARTEND': 'StartEnd', 'FIND': 'Find', 'BETWEEN': 'Between', 'CLIENT': 'Client', 'SORT': 'Sort', 'SHOWSTATS': 'ShowStats'}  
-        self.query = Query()    # base query instance
+        self.query = Query(searchSet)    # base query instance
 
     # if query is json-shaped string, deserialize 
     def parse_json(self, query):

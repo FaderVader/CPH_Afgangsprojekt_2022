@@ -1,16 +1,25 @@
-"""
-Public namedtuples 
-"""
-
 from collections import namedtuple
 from datetime import datetime
+from pydantic import BaseModel
+from typing import List
 
-# pointer to occurence of node in source-file
-Terminator = namedtuple("Terminator", "client date linenumber payload")
+## LogWatcher types
+class SourceSystem(BaseModel):
+    ID: int
+    Name: str
+    SourceFolder: str
+    LineTemplate: str | None = None
 
-# used in Query.StartEnd
-IntervalPair = namedtuple("IntervalPair", "delta pointer_A pointer_B")
+class SearchPeriod(BaseModel):
+    Item1: str
+    Item2: str
 
+class SearchSet(BaseModel):
+  SourceSystems: List[SourceSystem]
+  KeyWordList: str | None = None
+  SearchPeriod: SearchPeriod
+
+## LogParser type
 class LogLine():
     """
     This class is used for encapsulating a single line from a log-file.
@@ -32,7 +41,7 @@ class LogLine():
             timeStamp = ''
 
         try:
-            startIndex = logLine.find('[', 0)
+            startIndex = logLine.find(' ', 0)
             payload = logLine[startIndex:]
         except IndexError:
             payload = ''
@@ -61,6 +70,14 @@ class LogLine():
         time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d-%H:%M:%S.%f')  # convert from UNIX time
         return time
 
+"""
+Public namedtuples 
+"""
+# pointer to occurence of node in source-file
+Terminator = namedtuple("Terminator", "client date linenumber payload")
+
+# used in Query.StartEnd
+IntervalPair = namedtuple("IntervalPair", "delta pointer_A pointer_B")
 
 if __name__ == "__main__":
     epoch = LogLine.ConvertStringToTime('2020-10-01T09:12:02.7398274+02:00')

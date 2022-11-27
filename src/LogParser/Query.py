@@ -4,6 +4,7 @@ from BinarySearchTree import BST
 from PrepareTrie import PrepareTrie
 from Types import Terminator as Terminator
 from Types import IntervalPair as IntervalPair
+from Types import SearchSet
 from Utils import TermUtil as TermUtil
 from Utils import EpochTimeUtil as EpochTimeUtil
 
@@ -13,15 +14,16 @@ class Query:
     Low-level, generic methods for querying trie. Primary trie-building is invoked on instantiating.
     """
     # setup
-    def __init__(self):
+    def __init__(self, searchSet:SearchSet):
+        self.searchSet = searchSet
         self.log_trie = None      # main trie - contains content of all logs
         self.all_files = None     # all log-files in structured object
         self.search_trie = None   # trie used for coordinating word-searches
         self.results = None       # aggregated result-set
-        self.setup()
+        self.setup() 
 
     def setup(self):
-        trie = PrepareTrie()                       # setup the tries
+        trie = PrepareTrie(self.searchSet)         # setup the tries
         self.log_trie = trie.GetLogTrie()          # load log-trie
         self.all_files = trie.GetStructuredLogs()  # get the files in structured format
 

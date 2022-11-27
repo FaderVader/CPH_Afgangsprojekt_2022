@@ -1,13 +1,14 @@
 from Loader import Loader
 from Tries import LogTrie
 from Types import Terminator as Terminator
+from Types import SearchSet
 
 
 class PrepareTrie:
-    def __init__(self):
-        loader = Loader()
-        self.fileStructure = loader.GetStructure()
-        self.all_files = loader.GetStructuredLogs()
+    def __init__(self, searchSet:SearchSet):
+        loader = Loader(searchSet)
+        self.fileStructure = loader.GetStructuredLogs() #GetStructure() #TODO resinstate
+        self.all_files = loader.GetStructuredLogs() #TODO resinstate
         self.log_trie = None
 
     def buildTrie(self):
