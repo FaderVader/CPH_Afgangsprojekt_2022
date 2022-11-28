@@ -59,6 +59,8 @@ namespace FrontEnd
             var results = await engine.RetrieveResultsFromParser();
 
             // populate listbox
+            lb_SearchResults.DataSource = results;
+            lb_SearchResults.DisplayMember= "EventDescription";
         }
         #endregion
 

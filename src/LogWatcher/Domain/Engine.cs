@@ -109,7 +109,7 @@ namespace Domain
             await connector.SendSearch(searchSet);
         }
 
-        public async Task<string> RetrieveResultsFromParser()
+        public async Task<List<LogLine>> RetrieveResultsFromParser()
         {
             string results = null;
 
@@ -120,7 +120,21 @@ namespace Domain
             }
 
             var parsedResults = ParseStringToHitList(results);
-            return "";
+            var resultList = new List<LogLine>();
+
+            foreach (var systemID in parsedResults.Hits.Keys)
+            {
+                foreach (var fileID in parsedResults.Hits[systemID])
+                {
+                    foreach (var lineID in fileID.Value)
+                    {
+                        var line = await sqlConnect.GetLogLineById(lineID);
+                        resultList.Add(line);
+                    }
+                }
+            }
+
+            return resultList;
         }
         #endregion
 
@@ -180,8 +194,11 @@ namespace Domain
         {
             //parserResults = "[[4,8,272],[4,8,240],[4,8,296],[4,8,279],[4,7,272],[4,7,240],[4,7,279],[4,7,296]]";
 
-            var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();
             var hitList = new HitList();
+
+            if (string.IsNullOrEmpty(parserResults) || parserResults == "null") return hitList;
+
+            var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();
 
             _trimmed.ForEach(hit =>
                 {

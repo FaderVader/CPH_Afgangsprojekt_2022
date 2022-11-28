@@ -337,14 +337,17 @@ class Query:
         def inner(pointer):
             if pointer is None: return
 
-            # standard result-type - one line            
-            output.append((pointer.client, pointer.date, pointer.linenumber))
+            # standard result-type - one line        
+            actual_line = self.GetLine(pointer).GetPayLoad()   
+            lineId = actual_line.strip().split()[0]
+            output.append((pointer.client, pointer.date, int(lineId)))
 
             if pointer.payload is not None:  
                 # extended resulttype - payload has reference to linked line
                 linked_line = TermUtil.ToTerminator(pointer.payload)
-                # self.print_logLine(linked_line, format)
-                output.append((pointer.client, pointer.date, pointer.linenumber))
+                actual_line = self.GetLine(linked_line).GetPayLoad()   
+                lineId = actual_line.strip().split()[0]
+                output.append((pointer.client, pointer.date, int(lineId)))
                 inner(TermUtil.ToTerminator(linked_line))  # any more ?
                 
         for pointer in result_list:
@@ -363,7 +366,7 @@ class Query:
         else:
             time = actual_line.GetTimeStamp()
         print(time, actual_line.GetPayLoad())
-        
+
 
 if __name__ == "__main__":
     query = Query()

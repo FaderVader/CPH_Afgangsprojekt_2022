@@ -27,7 +27,7 @@ class Loader:
 
                     # create LogLines instance and add to list
                     time = logLine['RawText'].split()[0]
-                    tempLine = "{time} {description}".format(time=time, description=logLine['EventDescription'])
+                    tempLine = "{time} {id} {description}".format(time=time, id=logLine['ID'], description=logLine['EventDescription'])
                     line = LogLine(tempLine)
                     linesList.append(line)
                 logfileDict[logfile['ID']] = linesList

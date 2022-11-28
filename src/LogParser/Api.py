@@ -39,8 +39,8 @@ class Api():
 
         shell = Shell(searchSet) #parameter
         shell.do_find("setupsession")
-        # self.results = shell.do_query()
-        self.results = shell.do_run('')
+        self.results = shell.do_query() # api test
+        # self.results = shell.do_run('') # cmd test
         print(self.results)
 
 app = FastAPI()

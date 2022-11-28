@@ -165,6 +165,16 @@ namespace Domain.Database
         #endregion
 
         #region LogLines
+        public async Task<LogLine> GetLogLineById(int id)
+        {
+            var query = $"SELECT * FROM LogLines WHERE ID = {id}";
+            using (IDbConnection connection = new SqlConnection(connString))
+            {
+                var result = await connection.QueryAsync<LogLine>(query);
+                return result.FirstOrDefault();
+            };
+        }
+
         public async Task DeleteLogLinesForLogFile(LogFile logFile)
         {
             var query = $"DELETE FROM LogLines WHERE SourceSystemID = {logFile.SourceSystemID} AND LogFileID = {logFile.ID}";
