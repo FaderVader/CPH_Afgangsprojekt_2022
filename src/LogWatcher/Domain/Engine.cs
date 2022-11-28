@@ -108,6 +108,20 @@ namespace Domain
             // TODO: should we await response as confirmation of query receieved ?
             await connector.SendSearch(searchSet);
         }
+
+        public async Task<string> RetrieveResultsFromParser()
+        {
+            string results = null;
+
+            while (results == null)
+            {
+                await Task.Delay(1000);
+                results = await connector.PullResult();                
+            }
+
+            var parsedResults = ParseStringToHitList(results);
+            return "";
+        }
         #endregion
 
         #region private methods
@@ -160,6 +174,22 @@ namespace Domain
 
             return allLogLines;
         }
-        #endregion 
+        #endregion
+
+        private HitList ParseStringToHitList(string parserResults)
+        {
+            //parserResults = "[[4,8,272],[4,8,240],[4,8,296],[4,8,279],[4,7,272],[4,7,240],[4,7,279],[4,7,296]]";
+
+            var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();
+            var hitList = new HitList();
+
+            _trimmed.ForEach(hit =>
+                {
+                    var hitIds = hit.Split(',').ToList().Select(hit => Int32.Parse(hit.Trim())).ToArray();
+                    hitList.AddHit(hitIds[0], hitIds[1], hitIds[2]);
+                });
+
+            return hitList;
+        }
     }
 }

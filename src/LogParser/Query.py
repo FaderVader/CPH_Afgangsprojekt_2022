@@ -324,6 +324,33 @@ class Query:
         print('')  # one line spacer
         # print(f'result count: {len(self.results)}')
 
+    def ReturnResults(self, result_list=None, output=None):
+        """
+        Prepare the content of Query.results for return
+        """
+        if output is None:
+            output = []
+
+        if result_list is None:
+            result_list = self.results
+
+        def inner(pointer):
+            if pointer is None: return
+
+            # standard result-type - one line            
+            output.append((pointer.client, pointer.date, pointer.linenumber))
+
+            if pointer.payload is not None:  
+                # extended resulttype - payload has reference to linked line
+                linked_line = TermUtil.ToTerminator(pointer.payload)
+                # self.print_logLine(linked_line, format)
+                output.append((pointer.client, pointer.date, pointer.linenumber))
+                inner(TermUtil.ToTerminator(linked_line))  # any more ?
+                
+        for pointer in result_list:
+            inner(pointer)
+        return output
+
     def print_logLine(self, pointer, format=0):
         """
         Takes a Terminator as pointer to log-line and prints it.
@@ -336,7 +363,7 @@ class Query:
         else:
             time = actual_line.GetTimeStamp()
         print(time, actual_line.GetPayLoad())
-
+        
 
 if __name__ == "__main__":
     query = Query()

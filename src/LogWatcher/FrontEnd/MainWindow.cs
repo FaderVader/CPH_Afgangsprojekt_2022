@@ -50,6 +50,16 @@ namespace FrontEnd
             lb_SourceSystemList.DisplayMember = "Name";
             lb_SourceSystemList.DataSource = SourceSystems;
         }
+
+        public async Task RetrieveResult()
+        {
+            // Display "Searching.." in UI
+
+            // query API for result at interval until result != None
+            var results = await engine.RetrieveResultsFromParser();
+
+            // populate listbox
+        }
         #endregion
 
         #region button event-handlers
@@ -132,6 +142,7 @@ namespace FrontEnd
 
             var result = BuildSearchSet();
             await engine.SendQueryToParser(result);
+            await RetrieveResult();
         }
 
         #endregion

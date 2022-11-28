@@ -7,8 +7,8 @@ from Types import SearchSet
 class PrepareTrie:
     def __init__(self, searchSet:SearchSet):
         loader = Loader(searchSet)
-        self.fileStructure = loader.GetStructuredLogs() #GetStructure() #TODO resinstate
-        self.all_files = loader.GetStructuredLogs() #TODO resinstate
+        self.fileStructure = loader.GetStructuredLogs() #TODO do we need both references ?
+        self.all_files = loader.GetStructuredLogs() #TODO
         self.log_trie = None
 
     def buildTrie(self):

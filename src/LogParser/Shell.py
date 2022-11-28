@@ -14,14 +14,11 @@ class Shell(cmd.Cmd):
         super().__init__()       
         print("Loading all log-files ....")
         self.prompt = "LogParser> "
-
         self.searchSet = searchSet
+        self.results = None
 
         self.queryParser = QueryParser(searchSet)
         self.init_vars()
-
-        # always show help-text on startup
-        # self.show_help()
 
     def init_vars(self):
         """
@@ -86,6 +83,16 @@ class Shell(cmd.Cmd):
     def execute_query(self, final_query):
         try:
             self.queryParser.Parse(final_query)
+        except AttributeError as e:
+            print(f"Failed to execute query - AttributeError: {e}")
+        except ValueError as e:
+            print(f"Failed to execute query - ValueError: {e}")
+        except:
+            print("Failed to execute query.")
+
+    def execute_query_return(self, final_query):
+        try:
+            self.results = self.queryParser.ParseReturn(final_query)
         except AttributeError as e:
             print(f"Failed to execute query - AttributeError: {e}")
         except ValueError as e:
@@ -165,6 +172,10 @@ class Shell(cmd.Cmd):
         final_query = self.build_query()
         self.execute_query(final_query)
 
+    def do_query(self):
+        final_query = self.build_query()
+        self.execute_query_return(final_query)
+        return self.results
 
 if __name__ == "__main__":
     shell = Shell()

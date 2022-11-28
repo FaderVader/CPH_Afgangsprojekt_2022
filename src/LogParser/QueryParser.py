@@ -67,7 +67,23 @@ class QueryParser:
         except ValueError as e:
             print(f"Program error - Value error: {str(e)}")
         except:
-            print("No results found!")            
+            print("No results found!")     
+
+    def ParseReturn(self, args):
+        """
+        API entry-point. Process the search-args.
+        """
+        try:            
+            self.invoke_query(args)                     # run the requested method
+            results = self.query.ReturnResults()   
+            return results
+
+        except AttributeError as e:
+            print(f"Program error - Attribute error: {str(e)}")
+        except ValueError as e:
+            print(f"Program error - Value error: {str(e)}")
+        except:
+            print("No results found!")          
 
     def Show(self, args):
 
@@ -78,6 +94,7 @@ class QueryParser:
 
         self.query.ShowResults(1)
         print(f'\nResult count: {len(self.query.results)}')
+
 
     # eDSL key-words 
     def Find(self, args):

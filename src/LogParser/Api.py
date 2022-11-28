@@ -7,12 +7,18 @@ class Api():
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route("/search", self.Search, methods=["POST"]) #
+        self.router.add_api_route("/retrieve", self.Retrieve, methods=["GET"]) #
         self.dataBase = Database()
+        self.results = None
 
     def Search(self, searchSet: SearchSet):
         shell = Shell(searchSet) 
         shell.do_find(searchSet.KeyWordList)
-        shell.do_run('')
+        self.results = shell.do_query()
+        print(self.results)
+
+    def Retrieve(self):
+        return self.results
 
     # test
     def GetLogFiles(self, search: SearchSet):
@@ -33,7 +39,9 @@ class Api():
 
         shell = Shell(searchSet) #parameter
         shell.do_find("setupsession")
-        shell.do_run('')
+        # self.results = shell.do_query()
+        self.results = shell.do_run('')
+        print(self.results)
 
 app = FastAPI()
 api = Api()
@@ -42,4 +50,3 @@ app.include_router(api.router)
 if __name__ == "__main__":
     api = Api()
     api.Test() 
-
