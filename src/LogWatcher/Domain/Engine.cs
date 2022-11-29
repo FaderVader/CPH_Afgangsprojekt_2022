@@ -105,7 +105,6 @@ namespace Domain
 
         public async Task SendQueryToParser(SearchSet searchSet)
         {            
-            // TODO: should we await response as confirmation of query receieved ?
             await connector.SendSearch(searchSet);
         }
 
@@ -115,7 +114,7 @@ namespace Domain
 
             while (results == null)
             {
-                await Task.Delay(1000);
+                await Task.Delay(10);
                 results = await connector.PullResult();                
             }
 
@@ -146,6 +145,7 @@ namespace Domain
             var results = await sqlConnect.GetAllLogFiles(sourceSystem);
             return results;
         }
+        
         private async Task AddLogFileToDB(SourceSystem sourceSystem, string fileName)
         {  
             var logFile = new LogFile { FileName= fileName, SourceSystemID = sourceSystem.ID, SourceSystemName = sourceSystem.Name, FileHash = "" };
@@ -188,18 +188,13 @@ namespace Domain
 
             return allLogLines;
         }
-        #endregion
 
         private HitList ParseStringToHitList(string parserResults)
         {
-            //parserResults = "[[4,8,272],[4,8,240],[4,8,296],[4,8,279],[4,7,272],[4,7,240],[4,7,279],[4,7,296]]";
-
             var hitList = new HitList();
-
             if (string.IsNullOrEmpty(parserResults) || parserResults == "null") return hitList;
 
             var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();
-
             _trimmed.ForEach(hit =>
                 {
                     var hitIds = hit.Split(',').ToList().Select(hit => Int32.Parse(hit.Trim())).ToArray();
@@ -208,5 +203,6 @@ namespace Domain
 
             return hitList;
         }
+        #endregion
     }
 }

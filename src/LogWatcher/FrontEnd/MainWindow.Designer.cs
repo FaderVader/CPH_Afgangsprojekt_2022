@@ -378,6 +378,7 @@
             this.lb_SearchResults.ScrollAlwaysVisible = true;
             this.lb_SearchResults.Size = new System.Drawing.Size(364, 334);
             this.lb_SearchResults.TabIndex = 8;
+            this.lb_SearchResults.SelectedIndexChanged += new System.EventHandler(this.lb_SearchResults_SelectedIndexChanged);
             // 
             // lbl_SearchResults
             // 

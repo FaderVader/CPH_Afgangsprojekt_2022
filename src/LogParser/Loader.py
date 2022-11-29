@@ -31,7 +31,9 @@ class Loader:
                     line = LogLine(tempLine)
                     linesList.append(line)
                 logfileDict[logfile['ID']] = linesList
+                linesList = []
             sourceSystemDict[ssID.ID] = logfileDict
+            logfileDict = {}
         self.structure = sourceSystemDict
 
     def GetStructuredLogs(self): 

@@ -41,6 +41,8 @@ namespace FrontEnd
                 EnableSourceModifierButtons(enable);
             }
         }
+
+        public List<LogLine> SearchResults { get; set; }
         #endregion
 
         #region methods
@@ -53,14 +55,14 @@ namespace FrontEnd
 
         public async Task RetrieveResult()
         {
-            // Display "Searching.." in UI
+
 
             // query API for result at interval until result != None
-            var results = await engine.RetrieveResultsFromParser();
+            SearchResults = await engine.RetrieveResultsFromParser();
 
             // populate listbox
-            lb_SearchResults.DataSource = results;
-            lb_SearchResults.DisplayMember= "EventDescription";
+            lb_SearchResults.DataSource = SearchResults;
+            lb_SearchResults.DisplayMember = "EventDescription";
         }
         #endregion
 
@@ -138,13 +140,31 @@ namespace FrontEnd
             }
         }
 
+        private void lb_SearchResults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lb_SearchResults.SelectedIndex < 0) return;
+
+            var selectedLine = (LogLine)lb_SearchResults.SelectedItem;
+            tb_SelectedLine.Text = selectedLine.Rawtext;
+        }
+
         private async void btn_ExecuteSearch_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItems.Count < 1) return;
 
             var result = BuildSearchSet();
+
+            // Display "Searching.." in UI
+            lbl_SearchResults.Text = "Søger ...";
+            tb_SelectedLine.Text = "";
+
+            // Ensure result-list is cleared
+            lb_SearchResults.DataSource = null;
+
             await engine.SendQueryToParser(result);
             await RetrieveResult();
+
+            lbl_SearchResults.Text = $"Resultater ({SearchResults.Count})";
         }
 
         #endregion
