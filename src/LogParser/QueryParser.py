@@ -82,7 +82,7 @@ class QueryParser:
             print(f"Program error - Attribute error: {str(e)}")
         except ValueError as e:
             print(f"Program error - Value error: {str(e)}")
-        except:
+        except Exception as e:
             print("No results found!")          
 
     def Show(self, args):

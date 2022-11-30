@@ -342,6 +342,7 @@
             this.dt_DayStart.Name = "dt_DayStart";
             this.dt_DayStart.Size = new System.Drawing.Size(273, 23);
             this.dt_DayStart.TabIndex = 2;
+            this.dt_DayStart.Value = new System.DateTime(2020, 1, 1, 0, 0, 0, 0);
             // 
             // lbl_SearchTermsInput
             // 

@@ -44,7 +44,8 @@ class Query:
 
     # query utils
     def GetLine(self, pointer):
-        return self.all_files[pointer.client][pointer.date][pointer.linenumber]
+        line = self.all_files[int(pointer.client)][int(pointer.date)][int(pointer.linenumber)]
+        return line #self.all_files[pointer.client][pointer.date][pointer.linenumber]
 
     # query methods
     def MustContainWords(self, *args):
@@ -337,17 +338,17 @@ class Query:
         def inner(pointer):
             if pointer is None: return
 
-            # standard result-type - one line        
+            # standard result-type - one line   
             actual_line = self.GetLine(pointer).GetPayLoad()   
             lineId = actual_line.strip().split()[0]
-            output.append((pointer.client, pointer.date, int(lineId)))
+            output.append((int(pointer.client), int(pointer.date), int(lineId)))
 
             if pointer.payload is not None:  
                 # extended resulttype - payload has reference to linked line
                 linked_line = TermUtil.ToTerminator(pointer.payload)
                 actual_line = self.GetLine(linked_line).GetPayLoad()   
                 lineId = actual_line.strip().split()[0]
-                output.append((pointer.client, pointer.date, int(lineId)))
+                output.append((int(pointer.client), int(pointer.date), int(lineId)))
                 inner(TermUtil.ToTerminator(linked_line))  # any more ?
                 
         for pointer in result_list:

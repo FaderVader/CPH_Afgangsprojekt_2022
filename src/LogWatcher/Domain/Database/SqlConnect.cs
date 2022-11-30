@@ -1,12 +1,11 @@
-﻿using System;
-using Dapper;
+﻿using Dapper;
+using Domain.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Domain.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Domain.Database
 {

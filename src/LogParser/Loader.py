@@ -19,10 +19,12 @@ class Loader:
         linesList = []
         logfileDict = {}        
         sourceSystemDict = {}
+        searchPeriod = self.searchSet.SearchPeriod
+
         for ssID in self.searchSet.SourceSystems:   
             logfiles = self.database.GetLogFileBySSId(ssID.ID)
             for logfile in logfiles:
-                logLines = self.database.GetAllLogLinesByFileId(logfile['ID'])
+                logLines = self.database.GetAllLogLinesByFileId(logfile['ID'], searchPeriod)
                 for logLine in logLines:
 
                     # create LogLines instance and add to list

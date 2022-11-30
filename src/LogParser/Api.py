@@ -15,6 +15,7 @@ class Api():
         self.results = None # if result-query before new result is ready, ensure none is available
         shell = Shell(searchSet) 
         shell.do_find(searchSet.KeyWordList)
+        shell.do_sort('True')
         self.results = shell.do_query()
         print(self.results)
 
@@ -32,16 +33,17 @@ class Api():
 
     # test
     def Test(self):
-        searchPeriod = SearchPeriod(Item1='2022-11-24T00:00:00', Item2='2022-11-25T00:00:00')
-        sourceSystem1 = SourceSystem(ID=2, Name='Galaxy1', SourceFolder='C:\temp\logfiles')
-        sourceSystem2 = SourceSystem(ID=4, Name='Galaxy2', SourceFolder='C:\temp\logfiles2')
-        keywordList = 'test hest'
+        searchPeriod = SearchPeriod(Item1='2020-12-10T15:49', Item2='2020-12-10T15:50')
+        sourceSystem1 = SourceSystem(ID=10, Name='Galaxy5', SourceFolder='C:\temp\logfiles')
+        sourceSystem2 = SourceSystem(ID=12, Name='Galaxy6', SourceFolder='C:\temp\logfiles2')
+        keywordList = 'executing'
         searchSet = SearchSet(SourceSystems=[sourceSystem1, sourceSystem2], KeyWordList=keywordList, SearchPeriod=searchPeriod)
 
         shell = Shell(searchSet) #parameter
-        shell.do_find("setupsession")
-        # self.results = shell.do_query() # api test
-        self.results = shell.do_run('') # cmd test
+        shell.do_find(searchSet.KeyWordList)
+        shell.do_sort('true')
+        self.results = shell.do_query() # api test
+        # self.results = shell.do_run('') # cmd test
         print(self.results)
 
 app = FastAPI()
