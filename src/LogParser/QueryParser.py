@@ -56,26 +56,11 @@ class QueryParser:
     # Primary entry-point. Process the search-args.
     def Parse(self, args):
         """
-        Primary entry-point. Process the search-args.
-        """
-        try:            
-            self.invoke_query(args)  # run the requested method
-            self.Show(args)          # handle display of results
-
-        except AttributeError as e:
-            print(f"Program error - Attribute error: {str(e)}")
-        except ValueError as e:
-            print(f"Program error - Value error: {str(e)}")
-        except:
-            print("No results found!")     
-
-    def ParseReturn(self, args):
-        """
         API entry-point. Process the search-args.
         """
         try:            
-            self.invoke_query(args)                     # run the requested method
-            results = self.query.ReturnResults()   
+            self.invoke_query(args)   # run the requested method
+            results = self.query.GetResults()   
             return results
 
         except AttributeError as e:

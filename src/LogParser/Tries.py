@@ -71,6 +71,7 @@ class LogTrie:
         return currentNode.value
 
 
+
 class SearchTrie:
     """
     Container for all pointers - is used for counting occurrences of search-phrase within a pointer.\n

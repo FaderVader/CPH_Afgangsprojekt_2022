@@ -82,17 +82,7 @@ class Shell(cmd.Cmd):
 
     def execute_query(self, final_query):
         try:
-            self.queryParser.Parse(final_query)
-        except AttributeError as e:
-            print(f"Failed to execute query - AttributeError: {e}")
-        except ValueError as e:
-            print(f"Failed to execute query - ValueError: {e}")
-        except:
-            print("Failed to execute query.")
-
-    def execute_query_return(self, final_query):
-        try:
-            self.results = self.queryParser.ParseReturn(final_query)
+            self.results = self.queryParser.Parse(final_query)
         except AttributeError as e:
             print(f"Failed to execute query - AttributeError: {e}")
         except ValueError as e:
@@ -168,13 +158,9 @@ class Shell(cmd.Cmd):
         [print(f'{key}: {value}', end=', ') for key, value in current_query.items()]
         print('')
 
-    def do_run(self, args):
+    def do_run(self, args=None):
         final_query = self.build_query()
         self.execute_query(final_query)
-
-    def do_query(self):
-        final_query = self.build_query()
-        self.execute_query_return(final_query)
         return self.results
 
 if __name__ == "__main__":

@@ -59,7 +59,6 @@ class Database():
                 cursor.execute(query)
                 allLogLines = []
                 for row in cursor:
-                    # print("LogLineID=%d, TimeOfEvent=%s" % (row['ID'], row['TimeOfEvent']))
                     allLogLines.append(row)
                 return allLogLines
 

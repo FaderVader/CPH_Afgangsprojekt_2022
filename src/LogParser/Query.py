@@ -37,7 +37,7 @@ class Query:
 
         for arg in args_as_list:            
             word = arg.lower()  # all trie words are lowercased
-            matches = self.log_trie.FindWord(word)  # get pointers to matches for every word
+            matches = self.log_trie.FindWord(word)  #    # get pointers to matches for every word
 
             # build search-trie of pointers - terminator accumulates hit-count
             [self.search_trie.AddPointer(match) for match in matches]
@@ -247,7 +247,7 @@ class Query:
         delta_t = EpochTimeUtil.DeltaTimeUnWrap(delta_t_part)
         return delta_t, pointers_part
 
-    # display results
+    # return results
     def ShowStats(self, format=1, top_bottom=10):
         """
         Iterate over results.
@@ -299,33 +299,8 @@ class Query:
         print_lines(top_slice)
 
         print(f'\nTotal results: {results_count} - Average interval: {t_delta_average} seconds.\n')
-
-    def ShowResults(self, format=0, result_list=None):
-        """
-        Print the content of Query.results.
-        Add argument 'format=1' to print time in true date, otherwise epoch.
-        """
-        if result_list is None:
-            result_list = self.results
-
-        def inner(pointer):
-            if pointer is None: return
-
-            # standard result-type - one line            
-            self.print_logLine(pointer, format)
-
-            if pointer.payload is not None:  
-                # extended resulttype - payload has reference to linked line
-                linked_line = TermUtil.ToTerminator(pointer.payload)
-                self.print_logLine(linked_line, format)
-                inner(TermUtil.ToTerminator(linked_line))  # any more ?
-                
-        for pointer in result_list:
-            inner(pointer)
-        print('')  # one line spacer
-        # print(f'result count: {len(self.results)}')
-
-    def ReturnResults(self, result_list=None, output=None):
+   
+    def GetResults(self, result_list=None, output=None):
         """
         Prepare the content of Query.results for return
         """
@@ -354,19 +329,6 @@ class Query:
         for pointer in result_list:
             inner(pointer)
         return output
-
-    def print_logLine(self, pointer, format=0):
-        """
-        Takes a Terminator as pointer to log-line and prints it.
-        """
-        actual_line = self.GetLine(pointer)
-        print(f'Client: {pointer.client}, date: {pointer.date}, line: {pointer.linenumber}')
-
-        if format != 0:
-            time = LogLine.ConvertTimestampToString(actual_line.GetTimeStamp())
-        else:
-            time = actual_line.GetTimeStamp()
-        print(time, actual_line.GetPayLoad())
 
 
 if __name__ == "__main__":
