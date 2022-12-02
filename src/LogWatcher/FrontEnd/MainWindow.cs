@@ -53,17 +53,6 @@ namespace FrontEnd
             lb_SourceSystemList.DataSource = SourceSystems;
         }
 
-        public async Task RetrieveResult()
-        {
-
-
-            // query API for result at interval until result != None
-            SearchResults = await engine.RetrieveResultsFromParser();
-
-            // populate listbox
-            lb_SearchResults.DataSource = SearchResults;
-            lb_SearchResults.DisplayMember = "EventDescription";
-        }
         #endregion
 
         #region button event-handlers
@@ -152,7 +141,7 @@ namespace FrontEnd
         {
             if (lb_SourceSystemList.SelectedItems.Count < 1) return;
 
-            var result = BuildSearchSet();
+            var search = BuildSearchSet();
 
             // Display "Searching.." in UI
             lbl_SearchResults.Text = "Søger ...";
@@ -161,10 +150,19 @@ namespace FrontEnd
             // Ensure result-list is cleared
             lb_SearchResults.DataSource = null;
 
-            await engine.SendQueryToParser(result);
-            await RetrieveResult();
+            if (!string.IsNullOrEmpty(search.KeyWordList))
+            {
+                await engine.SendQueryToParser(search);
+                SearchResults = await engine.RetrieveResultsFromParser();
+            } else
+            {
+                SearchResults = await engine.RetrieveResultsFromDatabase(search);
+            }
 
+            // populate listbox
             lbl_SearchResults.Text = $"Resultater ({SearchResults.Count})";
+            lb_SearchResults.DataSource = SearchResults;
+            lb_SearchResults.DisplayMember = "EventDescription";
         }
 
         #endregion

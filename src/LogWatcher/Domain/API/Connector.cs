@@ -1,10 +1,6 @@
 ﻿using Domain.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,10 +11,8 @@ namespace Domain.API
         // ref: https://www.dotnetfunda.com/articles/show/2341/crud-operation-using-web-api-and-windows-application
         private const string uri = "http://localhost:8000";
 
-        public async Task<string> SendSearch(SearchSet searchSet)
+        public async Task<string> SendSearch(SearchSet searchSet, string endpoint = "search")
         {
-            const string endpoint = "search";
-
             using (var client = new HttpClient())
             {
                 var payload = JsonConvert.SerializeObject(searchSet);

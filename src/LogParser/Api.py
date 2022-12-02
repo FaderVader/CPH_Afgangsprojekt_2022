@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from Types import SearchSet, SourceSystem, SearchPeriod
 from Database import Database
 from Shell import Shell
@@ -7,16 +7,27 @@ class Api():
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route("/search", self.Search, methods=["POST"]) #
+        self.router.add_api_route("/research", self.ReSearch, methods=["POST"]) #
         self.router.add_api_route("/retrieve", self.Retrieve, methods=["GET"]) #
         self.dataBase = Database()
+        self.shell = None
         self.results = None
 
     def Search(self, searchSet: SearchSet):
         self.results = None # if result-query before new result is ready, ensure none is available
-        shell = Shell(searchSet) 
-        shell.do_find(searchSet.KeyWordList)
-        shell.do_sort('True')
-        self.results = shell.do_run()
+        self.shell = Shell(searchSet) 
+        self.shell.do_find(searchSet.KeyWordList)
+        self.shell.do_sort('True')
+        self.results = self.shell.do_run()
+        print(self.results)
+
+    def ReSearch(self, searchSet: SearchSet):
+        if (self.shell == None):
+            raise HTTPException(status_code=400, detail="Previous search not valid") 
+        self.results = None
+        self.shell.do_find(searchSet.KeyWordList)
+        self.shell.do_sort('True')
+        self.results = self.shell.do_run()
         print(self.results)
 
     def Retrieve(self):

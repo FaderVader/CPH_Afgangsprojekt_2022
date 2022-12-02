@@ -17,6 +17,8 @@ namespace Domain
         private FileLoader fileLoader;
         private Connector connector;
 
+        private SearchSet oldSearch;
+
         public Engine()
         {
             sqlConnect = new SqlConnect();
@@ -104,14 +106,14 @@ namespace Domain
         }
 
         public async Task SendQueryToParser(SearchSet searchSet)
-        {            
-            await connector.SendSearch(searchSet);
+        {
+            var endpoint = IsQueryReSearch(searchSet) ? "research" : "search";
+            await connector.SendSearch(searchSet, endpoint);
         }
 
         public async Task<List<LogLine>> RetrieveResultsFromParser()
         {
             string results = null;
-
             while (results == null)
             {
                 await Task.Delay(10);
@@ -135,10 +137,27 @@ namespace Domain
 
             return resultList;
         }
+
+        public async Task<List<LogLine>> RetrieveResultsFromDatabase(SearchSet searchSet)
+        {
+            var resultList = new List<LogLine>();
+
+            foreach (var ss in searchSet.SourceSystems)
+            {
+                var files = await sqlConnect.GetAllLogFiles(ss);
+                foreach (var file in files)
+                {
+                    var logLines = await sqlConnect.GetAllLogLineBySSIDandLogFileId(ss.ID, file.ID);
+                    resultList.AddRange(logLines);
+                }
+            }
+
+            return resultList;
+        }
         #endregion
 
         #region private methods
-        
+
         // database interaction
         private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
         {
@@ -202,6 +221,24 @@ namespace Domain
                 });
 
             return hitList;
+        }
+
+        private bool IsQueryReSearch(SearchSet newSearch) 
+        {
+            var isResearch = false;
+            if (oldSearch != null)
+            {
+                var ssNew = string.Join(",", newSearch.SourceSystems.Select(s => s.ID));
+                var ssOld = string.Join(",", oldSearch.SourceSystems.Select(s => s.ID));
+                if (ssNew != ssOld) isResearch = false;
+
+                if (newSearch.SearchPeriod.Start == oldSearch.SearchPeriod.Start && newSearch.SearchPeriod.End == oldSearch.SearchPeriod.End) 
+                {
+                    isResearch = true;
+                }
+            }
+            oldSearch = newSearch;
+            return isResearch;
         }
         #endregion
     }

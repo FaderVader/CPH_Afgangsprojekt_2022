@@ -174,6 +174,20 @@ namespace Domain.Database
             };
         }
 
+        /// <summary>
+        /// Get all loglines by SourceSystemID and LogFileId
+        /// </summary>
+        public async Task<List<LogLine>> GetAllLogLineBySSIDandLogFileId(int ssID, int logFileId)
+        {
+            var query = $"SELECT * FROM LogLines WHERE SourceSystemID = {ssID} and LogFileID = {logFileId};";
+
+            using (IDbConnection connection = new SqlConnection(connString))
+            {
+                var result = await connection.QueryAsync<LogLine>(query);
+                return result.ToList();
+            }
+        }
+
         public async Task DeleteLogLinesForLogFile(LogFile logFile)
         {
             var query = $"DELETE FROM LogLines WHERE SourceSystemID = {logFile.SourceSystemID} AND LogFileID = {logFile.ID}";
