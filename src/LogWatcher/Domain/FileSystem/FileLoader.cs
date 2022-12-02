@@ -21,8 +21,6 @@ namespace Domain.FileSystem
                 var parsed = LineParser(line);
                 if (!string.IsNullOrEmpty(parsed.TimeStamp))
                 {
-
-
                     var timeStamp = parsed.TimeStamp;
                     var severity = parsed.Severity;
                     var description = parsed.Description;

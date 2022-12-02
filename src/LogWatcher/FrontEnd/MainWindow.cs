@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,8 +22,7 @@ namespace FrontEnd
             engine = new Engine();
 
             PopulateSourceSystems();
-            EnableSourceModifierButtons(false);
-            EnableOpenLogFileButton(false);
+            ResetGui();
         }
 
         #region fields
@@ -60,6 +61,13 @@ namespace FrontEnd
             SourceSystems = await engine.GetAllSourceSystems();
             lb_SourceSystemList.DisplayMember = "Name";
             lb_SourceSystemList.DataSource = SourceSystems;
+        }
+
+        public void ResetGui()
+        {
+            EnableSourceModifierButtons(false);
+            EnableOpenLogFileButton(false);
+            DisplaySelectedLineSourceSystem();
         }
 
         #endregion
@@ -138,12 +146,18 @@ namespace FrontEnd
             }
         }
 
-        private void lb_SearchResults_SelectedIndexChanged(object sender, EventArgs e)
+        private async void lb_SearchResults_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lb_SearchResults.SelectedIndex < 0) return;
+            if (lb_SearchResults.SelectedIndex < 0)
+            {
+                tb_SearchResults_SelectedLine.Text = "";
+                return;
+            }
 
             var selectedLine = (LogLine)lb_SearchResults.SelectedItem;
-            tb_SelectedLine.Text = selectedLine.Rawtext;
+            tb_SearchResults_SelectedLine.Text = selectedLine.Rawtext;
+
+            await DisplaySelectedLineSourceSystem();
         }
 
         private async void btn_ExecuteSearch_Click(object sender, EventArgs e)
@@ -154,7 +168,7 @@ namespace FrontEnd
 
             // Display "Searching.." in UI
             lbl_SearchResults.Text = "Søger ...";
-            tb_SelectedLine.Text = "";
+            tb_SearchResults_SelectedLine.Text = "";
 
             // Ensure result-list is cleared
             lb_SearchResults.DataSource = null;
@@ -195,6 +209,20 @@ namespace FrontEnd
         private void EnableOpenLogFileButton(bool enable)
         {
             btn_OpenLogFile.Enabled = enable;
+        }
+
+        private async Task DisplaySelectedLineSourceSystem()
+        {
+            if (lb_SearchResults.SelectedItem == null) 
+            {
+                lbl_SearchResults_SelectedLine.Text = "";
+                return; 
+            }
+
+            var sourceSystems = await engine.GetAllSourceSystems();
+            var ss = sourceSystems.Where(ss => ss.ID == (lb_SearchResults.SelectedItem as LogLine).SourceSystemID).FirstOrDefault();
+
+            lbl_SearchResults_SelectedLine.Text = $"System: {ss.Name}" ?? "";
         }
 
         public static DialogResult InputBox(string title, string promptText, ref string value)

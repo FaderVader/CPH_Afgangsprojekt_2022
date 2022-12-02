@@ -143,6 +143,11 @@ namespace Domain
             return resultList;
         }
 
+        /// <summary>
+        /// Get result directly from database (when user doesn't provide keywords in search)
+        /// </summary>
+        /// <param name="searchSet"></param>
+        /// <returns></returns>
         public async Task<List<LogLine>> RetrieveResultsFromDatabase(SearchSet searchSet)
         {
             var resultList = new List<LogLine>();

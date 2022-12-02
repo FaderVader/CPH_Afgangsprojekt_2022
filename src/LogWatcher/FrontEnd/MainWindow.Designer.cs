@@ -59,9 +59,10 @@
             this.lbl_SourceSelect = new System.Windows.Forms.Label();
             this.lb_SearchResults = new System.Windows.Forms.ListBox();
             this.lbl_SearchResults = new System.Windows.Forms.Label();
-            this.tb_SelectedLine = new System.Windows.Forms.TextBox();
+            this.tb_SearchResults_SelectedLine = new System.Windows.Forms.TextBox();
             this.btn_OpenLogFile = new System.Windows.Forms.Button();
             this.lbl_SelectedLine = new System.Windows.Forms.Label();
+            this.lbl_SearchResults_SelectedLine = new System.Windows.Forms.Label();
             this.tbc_SourceFocus.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -391,14 +392,14 @@
             this.lbl_SearchResults.TabIndex = 9;
             this.lbl_SearchResults.Text = "Resultater";
             // 
-            // tb_SelectedLine
+            // tb_SearchResults_SelectedLine
             // 
-            this.tb_SelectedLine.Location = new System.Drawing.Point(658, 425);
-            this.tb_SelectedLine.Multiline = true;
-            this.tb_SelectedLine.Name = "tb_SelectedLine";
-            this.tb_SelectedLine.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.tb_SelectedLine.Size = new System.Drawing.Size(362, 57);
-            this.tb_SelectedLine.TabIndex = 10;
+            this.tb_SearchResults_SelectedLine.Location = new System.Drawing.Point(658, 425);
+            this.tb_SearchResults_SelectedLine.Multiline = true;
+            this.tb_SearchResults_SelectedLine.Name = "tb_SearchResults_SelectedLine";
+            this.tb_SearchResults_SelectedLine.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.tb_SearchResults_SelectedLine.Size = new System.Drawing.Size(362, 57);
+            this.tb_SearchResults_SelectedLine.TabIndex = 10;
             // 
             // btn_OpenLogFile
             // 
@@ -419,14 +420,24 @@
             this.lbl_SelectedLine.TabIndex = 12;
             this.lbl_SelectedLine.Text = "Valgt linje";
             // 
+            // lbl_SearchResults_SelectedLine
+            // 
+            this.lbl_SearchResults_SelectedLine.AutoSize = true;
+            this.lbl_SearchResults_SelectedLine.Location = new System.Drawing.Point(658, 486);
+            this.lbl_SearchResults_SelectedLine.Name = "lbl_SearchResults_SelectedLine";
+            this.lbl_SearchResults_SelectedLine.Size = new System.Drawing.Size(38, 15);
+            this.lbl_SearchResults_SelectedLine.TabIndex = 13;
+            this.lbl_SearchResults_SelectedLine.Text = "label1";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1036, 555);
+            this.Controls.Add(this.lbl_SearchResults_SelectedLine);
             this.Controls.Add(this.lbl_SelectedLine);
             this.Controls.Add(this.btn_OpenLogFile);
-            this.Controls.Add(this.tb_SelectedLine);
+            this.Controls.Add(this.tb_SearchResults_SelectedLine);
             this.Controls.Add(this.lbl_SearchResults);
             this.Controls.Add(this.lb_SearchResults);
             this.Controls.Add(this.lbl_SourceSelect);
@@ -484,12 +495,13 @@
         private System.Windows.Forms.Label lbl_EndHours;
         private System.Windows.Forms.ListBox lb_SearchResults;
         private System.Windows.Forms.Label lbl_SearchResults;
-        private System.Windows.Forms.TextBox tb_SelectedLine;
+        private System.Windows.Forms.TextBox tb_SearchResults_SelectedLine;
         private System.Windows.Forms.Button btn_OpenLogFile;
         private System.Windows.Forms.Label lbl_SelectedLine;
         private System.Windows.Forms.Button btn_SourceFocus_Browse;
         private System.Windows.Forms.Button btn_SourceFocus_DirectorySave;
         private System.Windows.Forms.TextBox tb_SourceFocus_Directory;
         private System.Windows.Forms.TextBox tb_SourceFocus_LineTemplate;
+        private System.Windows.Forms.Label lbl_SearchResults_SelectedLine;
     }
 }
