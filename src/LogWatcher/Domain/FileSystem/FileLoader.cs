@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,42 +19,54 @@ namespace Domain.FileSystem
             lines.ToList().ForEach(line =>
             {
                 var parsed = LineParser(line);
-                var timeStamp = parsed.TimeStamp;
-                var severity = parsed.Severity;
-                var description = parsed.Description;
-                var module = parsed.Module;
-
-                var isValidLine = DateTime.TryParse(timeStamp, out _);
-
-                if (isValidLine)
+                if (!string.IsNullOrEmpty(parsed.TimeStamp))
                 {
-                    var logLine = new LogLine
-                    {
-                        SourceSystemID = source.ID,
-                        LogFileID = logFileId,
-                        TimeOfEvent = DateTime.Parse(timeStamp),
-                        Severity = severity,
-                        EventDescription = description,
-                        SourceModule = module,
-                        Rawtext = line
-                    };
 
-                    logLines.Add(logLine);
+
+                    var timeStamp = parsed.TimeStamp;
+                    var severity = parsed.Severity;
+                    var description = parsed.Description;
+                    var module = parsed.Module;
+
+                    var isValidLine = DateTime.TryParse(timeStamp, out _);
+
+                    if (isValidLine)
+                    {
+                        var logLine = new LogLine
+                        {
+                            SourceSystemID = source.ID,
+                            LogFileID = logFileId,
+                            TimeOfEvent = DateTime.Parse(timeStamp),
+                            Severity = severity,
+                            EventDescription = description,
+                            SourceModule = module,
+                            Rawtext = line
+                        };
+
+                        logLines.Add(logLine);
+                    }
                 }
-            });            
+            });
 
             return logLines;
         }
 
         private static (string TimeStamp, string Severity, string Description, string Module) LineParser(string line)
         {
-            var timeStamp = line.Substring(0, 33);
-            var severity = line.Substring(34, 6);
-            var description = line.Substring(40);
-            var module = "";
+            try
+            {
+                var timeStamp = line.Substring(0, 33);
+                var severity = line.Substring(34, 6);
+                var description = line.Substring(40);
+                var module = "";
 
-            (string, string, string, string) result = (timeStamp, severity, description, module);
-            return result;
+                (string, string, string, string) result = (timeStamp, severity, description, module);
+                return result;
+            }
+            catch (Exception)
+            {
+                return ("", "", "", "");
+            }
         }
     }
 }

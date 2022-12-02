@@ -302,6 +302,7 @@
             this.dt_DayEnd.Name = "dt_DayEnd";
             this.dt_DayEnd.Size = new System.Drawing.Size(273, 23);
             this.dt_DayEnd.TabIndex = 6;
+            this.dt_DayEnd.Value = new System.DateTime(2020, 9, 30, 0, 0, 0, 0);
             // 
             // lbl_PeriodStart
             // 
@@ -342,7 +343,7 @@
             this.dt_DayStart.Name = "dt_DayStart";
             this.dt_DayStart.Size = new System.Drawing.Size(273, 23);
             this.dt_DayStart.TabIndex = 2;
-            this.dt_DayStart.Value = new System.DateTime(2020, 1, 1, 0, 0, 0, 0);
+            this.dt_DayStart.Value = new System.DateTime(2020, 9, 1, 0, 0, 0, 0);
             // 
             // lbl_SearchTermsInput
             // 
@@ -407,6 +408,7 @@
             this.btn_OpenLogFile.TabIndex = 11;
             this.btn_OpenLogFile.Text = "Åbn logfil";
             this.btn_OpenLogFile.UseVisualStyleBackColor = true;
+            this.btn_OpenLogFile.Click += new System.EventHandler(this.btn_OpenLogFile_Click);
             // 
             // lbl_SelectedLine
             // 

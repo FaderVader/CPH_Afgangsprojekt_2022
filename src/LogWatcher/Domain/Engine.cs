@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain
@@ -105,12 +104,18 @@ namespace Domain
             await Task.WhenAll(addFilesTasks);            
         }
 
+        /// <summary>
+        /// Send HTTP query to LogParser API.
+        /// </summary>
         public async Task SendQueryToParser(SearchSet searchSet)
         {
             var endpoint = IsQueryReSearch(searchSet) ? "research" : "search";
             await connector.SendSearch(searchSet, endpoint);
         }
 
+        /// <summary>
+        /// Query LogParser API for result.
+        /// </summary>
         public async Task<List<LogLine>> RetrieveResultsFromParser()
         {
             string results = null;
@@ -147,12 +152,31 @@ namespace Domain
                 var files = await sqlConnect.GetAllLogFiles(ss);
                 foreach (var file in files)
                 {
-                    var logLines = await sqlConnect.GetAllLogLineBySSIDandLogFileId(ss.ID, file.ID);
+                    var logLines = await sqlConnect.GetAllLogLinesBySSIDandLogFileIdAndPeriod(ss.ID, file.ID, searchSet);
                     resultList.AddRange(logLines);
                 }
             }
 
             return resultList;
+        }
+
+        public async Task OpenLogFile(LogLine selectedLine)
+        {
+            var sourceSystem = await sqlConnect.GetSourceSystemById(selectedLine.SourceSystemID);
+            if (sourceSystem == null) return;
+
+            var sourceFile = await sqlConnect.GetLogFileById(selectedLine.LogFileID);
+            if (sourceFile == null) return;
+
+            var fileDirectory = sourceSystem.SourceFolder;
+            var fileName = sourceFile.FileName;
+            var completedPath = Path.Combine(sourceSystem.SourceFolder, sourceFile.FileName);
+
+            var fileExists = await Task.Run(() => { return File.Exists(completedPath); });
+            if (fileExists)
+            {
+                await FileSystem.OpenLogFile.OpenWithDefault(completedPath);
+            }
         }
         #endregion
 

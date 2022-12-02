@@ -21,6 +21,7 @@ namespace FrontEnd
 
             PopulateSourceSystems();
             EnableSourceModifierButtons(false);
+            EnableOpenLogFileButton(false);
         }
 
         #region fields
@@ -29,6 +30,7 @@ namespace FrontEnd
 
         #region properties
         public List<SourceSystem> SourceSystems { get; set; }
+        public SearchSet SearchSet { get; private set; }
 
         private SourceSystem selectedSourceSystem;
         public SourceSystem SelectedSourceSystem
@@ -42,7 +44,14 @@ namespace FrontEnd
             }
         }
 
-        public List<LogLine> SearchResults { get; set; }
+        private List<LogLine> searchResults;
+        public List<LogLine> SearchResults { get { return searchResults; } 
+            private set 
+            {
+                searchResults = value;
+                var enable = searchResults.Count > 0 ? true : false;
+                EnableOpenLogFileButton(enable);
+            } }
         #endregion
 
         #region methods
@@ -165,6 +174,12 @@ namespace FrontEnd
             lb_SearchResults.DisplayMember = "EventDescription";
         }
 
+
+        private async void btn_OpenLogFile_Click(object sender, EventArgs e)
+        {
+            var selectedLine = lb_SearchResults.SelectedItem as LogLine;
+            await engine.OpenLogFile(selectedLine);
+        }
         #endregion
 
         #region helpers
@@ -175,6 +190,11 @@ namespace FrontEnd
             btn_UpdateSource.Enabled = enable;
             btn_SourceFocus_DirectorySave.Enabled = enable;
             gb_Search.Enabled = enable;
+        }
+
+        private void EnableOpenLogFileButton(bool enable)
+        {
+            btn_OpenLogFile.Enabled = enable;
         }
 
         public static DialogResult InputBox(string title, string promptText, ref string value)
@@ -244,5 +264,6 @@ namespace FrontEnd
             return searchSet;
         }
         #endregion
+
     }
 }

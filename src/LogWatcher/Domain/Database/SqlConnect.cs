@@ -25,6 +25,17 @@ namespace Domain.Database
             };
         }
 
+        public async Task<SourceSystem> GetSourceSystemById(int id)
+        {
+            var query = $"SELECT * FROM SourceSystems WHERE ID = {id};";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(connString))
+            {
+                var result = await connection.QueryAsync<SourceSystem>(query);
+                return result.FirstOrDefault();
+            };
+        }
+
         public async Task<SourceSystem> CreateSourceSystem(SourceSystem sourceSystem)
         {
             var query = $"INSERT INTO SourceSystems (Name, SourceFolder, LineTemplate) VALUES (@Name, @SourceFolder, @LineTemplate)";
@@ -177,9 +188,11 @@ namespace Domain.Database
         /// <summary>
         /// Get all loglines by SourceSystemID and LogFileId
         /// </summary>
-        public async Task<List<LogLine>> GetAllLogLineBySSIDandLogFileId(int ssID, int logFileId)
+        public async Task<List<LogLine>> GetAllLogLinesBySSIDandLogFileIdAndPeriod(int ssID, int logFileId, SearchSet searchSet)
         {
-            var query = $"SELECT * FROM LogLines WHERE SourceSystemID = {ssID} and LogFileID = {logFileId};";
+            var dateFormat = "yyyy-MM-dd HH:mm:ss";
+            var query = $"SELECT * FROM LogLines WHERE SourceSystemID = {ssID} and LogFileID = {logFileId}";
+            query += $"  AND TimeOfEvent BETWEEN '{searchSet.SearchPeriod.Start.ToString(dateFormat)}' AND '{searchSet.SearchPeriod.End.ToString(dateFormat)}';";
 
             using (IDbConnection connection = new SqlConnection(connString))
             {
