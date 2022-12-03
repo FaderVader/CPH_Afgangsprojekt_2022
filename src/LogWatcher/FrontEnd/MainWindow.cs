@@ -30,7 +30,7 @@ namespace FrontEnd
         #endregion
 
         #region properties
-        public List<SourceSystem> SourceSystems { get; set; }
+        public List<SourceSystem> SourceSystemCollection { get; set; }
         public SearchSet SearchSet { get; private set; }
 
         private SourceSystem selectedSourceSystem;
@@ -58,9 +58,9 @@ namespace FrontEnd
         #region methods
         public async Task PopulateSourceSystems()
         {
-            SourceSystems = await engine.GetAllSourceSystems();
+            SourceSystemCollection = await engine.GetAllSourceSystems();
             lb_SourceSystemList.DisplayMember = "Name";
-            lb_SourceSystemList.DataSource = SourceSystems;
+            lb_SourceSystemList.DataSource = SourceSystemCollection;
         }
 
         public void ResetGui()

@@ -20,8 +20,14 @@ SELECT * FROM LogLines;
 --DELETE FROM LogFiles WHERE SourceSystemID = 1 AND FileName = 'GalaxySiteSelector-AX76707-20201210.log';
 
 SELECT * FROM LogFiles WHERE SourceSystemID = 6;
-SELECT * FROM LogLines WHERE LogFileID = 7 ORDER BY TimeOfEvent; --AND SourceSystemID = 4; 
+SELECT * FROM LogLines WHERE LogFileID = 16 ORDER BY TimeOfEvent; --AND SourceSystemID = 4; 
 
 SELECT * FROM LogLines WHERE LogFileID=15 AND TimeOfEvent BETWEEN '2020-12-10 15:49' AND '2020-12-10 15:50';
-
 SELECT * FROM LogLines WHERE SourceSystemID=10 AND TimeOfEvent BETWEEN '2020-12-10 15:49' AND '2020-12-10 15:50';
+
+SELECT * FROM LogLines WHERE SourceSystemID = 10 and LogFileID = 15  AND TimeOfEvent BETWEEN '10-12-2020 00:00:00' AND '11-12-2020 23:00:00';
+SELECT * FROM LogLines WHERE SourceSystemID = 10 ORDER BY TimeOfEvent;
+SELECT * FROM LogLines WHERE SourceSystemID = 10 AND TimeOfEvent BETWEEN '10-12-2020 15:46:00' AND '10-12-2020 16:48:00';
+SELECT * FROM LogLines WHERE SourceSystemID = 10 and LogFileID = 15  AND TimeOfEvent BETWEEN '2020-09-04 18:16:00' AND '2020-09-04 18:20:00';
+
+SELECT * FROM LogLines WHERE LEN(RawText) < 101;
