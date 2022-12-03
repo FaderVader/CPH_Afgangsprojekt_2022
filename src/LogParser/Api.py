@@ -36,9 +36,9 @@ class Api():
     # test
     def Test(self):
         searchPeriod = SearchPeriod(Item1='2020-12-09T15:49', Item2='2020-12-10T15:50')
-        sourceSystem1 = SourceSystem(ID=10, Name='Galaxy5', SourceFolder='C:\temp\logfiles')
+        sourceSystem1 = SourceSystem(ID=2, Name='Galaxy5', SourceFolder='C:\temp\logfiles')
         sourceSystem2 = SourceSystem(ID=12, Name='Galaxy6', SourceFolder='C:\temp\logfiles2')
-        keywordList = 'setupsession' #setupsession
+        keywordList = 'setupsession completed' #setupsession
         searchSet = SearchSet(SourceSystems=[sourceSystem1, sourceSystem2], KeyWordList=keywordList, SearchPeriod=searchPeriod)
 
         shell = Shell(searchSet) #parameter
