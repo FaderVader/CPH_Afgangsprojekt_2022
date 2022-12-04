@@ -237,9 +237,9 @@ namespace Domain
             return allLogLines;
         }
 
-        private HitList ParseStringToHitList(string parserResults)
+        private HitCollection ParseStringToHitList(string parserResults)
         {
-            var hitList = new HitList();
+            var hitList = new HitCollection();
             if (string.IsNullOrEmpty(parserResults) || parserResults == "null") return hitList;
 
             var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();

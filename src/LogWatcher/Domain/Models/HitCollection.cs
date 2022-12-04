@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Domain.Models
 {
-    public class HitList
+    public class HitCollection
     {
         public Dictionary<int, Dictionary<int, List<int>>> Hits = new Dictionary<int, Dictionary<int, List<int>>>();
 
