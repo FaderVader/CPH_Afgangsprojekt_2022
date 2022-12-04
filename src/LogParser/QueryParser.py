@@ -70,17 +70,6 @@ class QueryParser:
         except Exception as e:
             print("No results found!")          
 
-    def Show(self, args):
-
-        # if SHOWSTATS has value, results are already printed ..
-        stats_active = args.get('SHOWSTATS', False)
-        if stats_active: 
-            return  # .. so we dont show std. results
-
-        self.query.ShowResults(1)
-        print(f'\nResult count: {len(self.query.results)}')
-
-
     # eDSL key-words 
     def Find(self, args):
         self.query.MustContainWords(*args)
