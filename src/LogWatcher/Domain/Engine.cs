@@ -16,7 +16,7 @@ namespace Domain
         private FileLoader fileLoader;
         private Connector connector;
 
-        private SearchSet oldSearch;
+        public SearchSet OldSearch { get; private set; }
 
         public Engine()
         {
@@ -183,6 +183,14 @@ namespace Domain
                 await FileSystem.OpenLogFile.OpenWithDefault(completedPath);
             }
         }
+
+        /// <summary>
+        /// Used for ensuring we never /research if files are updated
+        /// </summary>
+        public void ResetOldSearch()
+        {
+            OldSearch = null;
+        }
         #endregion
 
         #region private methods
@@ -254,20 +262,22 @@ namespace Domain
 
         private bool IsQueryReSearch(SearchSet newSearch) 
         {
-            var isResearch = false;
-            if (oldSearch != null)
+            if (OldSearch != null)
             {
                 var ssNew = string.Join(",", newSearch.SourceSystems.Select(s => s.ID));
-                var ssOld = string.Join(",", oldSearch.SourceSystems.Select(s => s.ID));
-                if (ssNew != ssOld) isResearch = false;
-
-                if (newSearch.SearchPeriod.Start == oldSearch.SearchPeriod.Start && newSearch.SearchPeriod.End == oldSearch.SearchPeriod.End) 
+                var ssOld = string.Join(",", OldSearch.SourceSystems.Select(s => s.ID));
+                if (ssNew != ssOld)
                 {
-                    isResearch = true;
+                    return false;
+                }
+
+                if (newSearch.SearchPeriod.Start == OldSearch.SearchPeriod.Start && newSearch.SearchPeriod.End == OldSearch.SearchPeriod.End) 
+                {
+                    return true;
                 }
             }
-            oldSearch = newSearch;
-            return isResearch;
+            OldSearch = newSearch;
+            return false;
         }
         #endregion
     }

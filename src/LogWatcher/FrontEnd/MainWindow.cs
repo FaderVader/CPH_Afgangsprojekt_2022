@@ -124,6 +124,9 @@ namespace FrontEnd
         private async void btn_UpdateSource_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItem == null) return;
+            
+            engine.ResetOldSearch();
+
             SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
             await engine.UpdateSourceSystem(SelectedSourceSystem);
         }
