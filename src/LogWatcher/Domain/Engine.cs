@@ -128,9 +128,9 @@ namespace Domain
             var parsedResults = ParseStringToHitList(results);
             var resultList = new List<LogLine>();
 
-            foreach (var systemID in parsedResults.Hits.Keys)
+            foreach (var systemID in parsedResults.LogHits.Keys)
             {
-                foreach (var fileID in parsedResults.Hits[systemID])
+                foreach (var fileID in parsedResults.LogHits[systemID])
                 {
                     foreach (var lineID in fileID.Value)
                     {
