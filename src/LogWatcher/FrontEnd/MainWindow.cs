@@ -12,10 +12,10 @@ namespace FrontEnd
 {
     public partial class MainWindow : Form
     {
-        public MainWindow()
+        public MainWindow(Engine engine)
         {
             InitializeComponent();
-            engine = new Engine();
+            this.engine = engine;
 
             PopulateSourceSystems();
             ResetGui();

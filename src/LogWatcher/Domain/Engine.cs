@@ -18,11 +18,11 @@ namespace Domain
 
         public SearchSet OldSearch { get; private set; }
 
-        public Engine()
+        public Engine(SqlConnect sqlConnect, FileLoader fileLoader, Connector connector)
         {
-            sqlConnect = new SqlConnect();
-            fileLoader = new FileLoader();
-            connector = new Connector();
+            this.sqlConnect = sqlConnect;
+            this.fileLoader = fileLoader;
+            this.connector = connector;
         }
 
         #region public methods
