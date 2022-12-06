@@ -4,22 +4,22 @@ namespace Domain.Models
 {
     public class HitCollection
     {
-        public Dictionary<int, Dictionary<int, List<int>>> LogHits { get; set; } = new Dictionary<int, Dictionary<int, List<int>>>();
+        public Dictionary<int, Dictionary<int, List<int>>> Hits { get; set; } = new Dictionary<int, Dictionary<int, List<int>>>();
 
         public void AddHit(int system, int file, int line)
         {
-            if (!LogHits.ContainsKey(system))
+            if (!Hits.ContainsKey(system))
             {
                 var _file = new Dictionary<int, List<int>>() { { file, new List<int> { line } } };
-                LogHits.Add(system, _file);
+                Hits.Add(system, _file);
             } else
             {
-                if (!LogHits[system].ContainsKey(file))
+                if (!Hits[system].ContainsKey(file))
                 {
-                    LogHits[system].Add(file, new List<int>() { line });
+                    Hits[system].Add(file, new List<int>() { line });
                 } else
                 {
-                    LogHits[system][file].Add(line);
+                    Hits[system][file].Add(line);
                 }
             }
         }

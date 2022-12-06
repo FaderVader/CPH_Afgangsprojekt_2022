@@ -125,12 +125,12 @@ namespace Domain
                 results = await connector.PullResult();                
             }
 
-            var parsedResults = ParseStringToHitList(results);
+            var parsedResults = ParseStringToHitCollection(results);
             var resultList = new List<LogLine>();
 
-            foreach (var systemID in parsedResults.LogHits.Keys)
+            foreach (var systemID in parsedResults.Hits.Keys)
             {
-                foreach (var fileID in parsedResults.LogHits[systemID])
+                foreach (var fileID in parsedResults.Hits[systemID])
                 {
                     foreach (var lineID in fileID.Value)
                     {
@@ -165,6 +165,11 @@ namespace Domain
             return resultList;
         }
 
+        /// <summary>
+        /// Open referenced logfile in external application.
+        /// </summary>
+        /// <param name="selectedLine"></param>
+        /// <returns></returns>
         public async Task OpenLogFile(LogLine selectedLine)
         {
             var sourceSystem = await sqlConnect.GetSourceSystemById(selectedLine.SourceSystemID);
@@ -193,9 +198,7 @@ namespace Domain
         }
         #endregion
 
-        #region private methods
-
-        // database interaction
+        #region private methods - database interaction
         private async Task<List<LogFile>> GetFilesInDB(SourceSystem sourceSystem)
         {
             var results = await sqlConnect.GetAllLogFiles(sourceSystem);
@@ -223,8 +226,9 @@ namespace Domain
             });
             await Task.WhenAll(deleteTasks);
         }
+        #endregion
 
-        // filesystem interaction
+        #region private methods - filesystem interaction
         private async Task<List<string>> GetFilesInDirectory(string sourcePath)
         {
             var results = new List<string>();
@@ -245,21 +249,23 @@ namespace Domain
             return allLogLines;
         }
 
-        private HitCollection ParseStringToHitList(string parserResults)
+        private HitCollection ParseStringToHitCollection(string parserResults)
         {
-            var hitList = new HitCollection();
-            if (string.IsNullOrEmpty(parserResults) || parserResults == "null") return hitList;
+            var hitCollection = new HitCollection();
+            if (string.IsNullOrEmpty(parserResults) || parserResults == "null") return hitCollection;
 
             var _trimmed = parserResults.Substring(2, parserResults.Length - 4).Split("],[").ToList();
             _trimmed.ForEach(hit =>
                 {
                     var hitIds = hit.Split(',').ToList().Select(hit => Int32.Parse(hit.Trim())).ToArray();
-                    hitList.AddHit(hitIds[0], hitIds[1], hitIds[2]);
+                    hitCollection.AddHit(hitIds[0], hitIds[1], hitIds[2]);
                 });
 
-            return hitList;
+            return hitCollection;
         }
+        #endregion
 
+        #region utils
         private bool IsQueryReSearch(SearchSet newSearch) 
         {
             var isReseach = false;
