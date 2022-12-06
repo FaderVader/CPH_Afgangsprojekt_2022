@@ -14,6 +14,7 @@ class Api():
         self.results = None
 
     def Search(self, searchSet: SearchSet):
+        print("route: /search")
         self.results = None # if result-query before new result is ready, ensure none is available
         self.shell = Shell(searchSet) 
         self.shell.do_find(searchSet.KeyWordList)
@@ -22,6 +23,7 @@ class Api():
         print(self.results)
 
     def ReSearch(self, searchSet: SearchSet):
+        print("route: /research")
         if (self.shell == None):
             raise HTTPException(status_code=400, detail="Previous search not valid") 
         self.results = None

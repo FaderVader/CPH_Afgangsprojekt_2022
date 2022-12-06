@@ -262,22 +262,22 @@ namespace Domain
 
         private bool IsQueryReSearch(SearchSet newSearch) 
         {
+            var isReseach = false;
             if (OldSearch != null)
             {
                 var ssNew = string.Join(",", newSearch.SourceSystems.Select(s => s.ID));
                 var ssOld = string.Join(",", OldSearch.SourceSystems.Select(s => s.ID));
-                if (ssNew != ssOld)
-                {
-                    return false;
-                }
 
-                if (newSearch.SearchPeriod.Start == OldSearch.SearchPeriod.Start && newSearch.SearchPeriod.End == OldSearch.SearchPeriod.End) 
+                var ssIdentical = ssNew == ssOld;
+                var searchPeriodIdentical = newSearch.SearchPeriod.Start == OldSearch.SearchPeriod.Start && newSearch.SearchPeriod.End == OldSearch.SearchPeriod.End;
+
+                if (ssIdentical && searchPeriodIdentical)
                 {
-                    return true;
+                    isReseach = true;
                 }
             }
             OldSearch = newSearch;
-            return false;
+            return isReseach;
         }
         #endregion
     }

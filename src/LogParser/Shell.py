@@ -12,11 +12,11 @@ class Shell(cmd.Cmd):
     """
     def __init__(self, searchSet: SearchSet):
         super().__init__()       
-        print("Loading all log-files ....")
         self.prompt = "LogParser> "
         self.searchSet = searchSet
         self.results = None
 
+        print("Loading all log-files ....")
         self.queryParser = QueryParser(searchSet)
         self.init_vars()
 
@@ -41,15 +41,6 @@ class Shell(cmd.Cmd):
             except:
                 print("Failed to parse command")
         return inner
-
-    def show_help(self):
-        path = "help.txt"
-        if not check_path.isfile(path):
-            path = "src/help.txt"
-
-        with open(path) as help:
-            for line in help:
-                print(line, end="")
 
     def parse_dates(self, args):
         dates = args.lower().split()
@@ -143,20 +134,12 @@ class Shell(cmd.Cmd):
         print(f'Clients: {clients}')
 
     # cli commands - query management 
-    def do_help(self, args):
-        self.show_help()
-
     def do_reset(self, args):
         self.init_vars()
 
     def do_exit(self, args):
         print("Goodbye ....")
         sys.exit()
-
-    def do_show(self, args):
-        current_query = self.build_query()
-        [print(f'{key}: {value}', end=', ') for key, value in current_query.items()]
-        print('')
 
     def do_run(self, args=None):
         final_query = self.build_query()
