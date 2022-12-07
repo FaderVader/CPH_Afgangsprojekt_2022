@@ -16,9 +16,11 @@ namespace FrontEnd
         {
             InitializeComponent();
             this.engine = engine;
+            engine.UIEvent += HandleUiEvent;
 
             PopulateSourceSystems();
-            ResetGui();
+            DisplaySelectedLine();
+            UpdateButtonState();
         }
 
         #region fields
@@ -37,18 +39,19 @@ namespace FrontEnd
             {
                 selectedSourceSystem = value;
                 var enable = selectedSourceSystem == null ? false : true;
-                EnableSourceModifierButtons(enable);
+                UpdateButtonState();
             }
         }
 
         private List<LogLine> searchResults;
         public List<LogLine> SearchResults { get { return searchResults; } 
-            private set 
+            private set
             {
                 searchResults = value;
-                var enable = searchResults.Count > 0 ? true : false;
-                EnableOpenLogFileButton(enable);
-            } }
+                var enable = searchResults?.Count > 0 ? true : false;
+                UpdateButtonState();
+            }
+        }
         #endregion
 
         #region methods
@@ -59,11 +62,9 @@ namespace FrontEnd
             lb_SourceSystemList.DataSource = SourceSystemCollection;
         }
 
-        public void ResetGui()
+        public void HandleUiEvent(object sender, UIEventArg eventArg)
         {
-            EnableSourceModifierButtons(false);
-            EnableOpenLogFileButton(false);
-            DisplaySelectedLineSourceSystem();
+            UpdateButtonState();
         }
 
         #endregion
@@ -104,9 +105,17 @@ namespace FrontEnd
             {
                 if (!string.IsNullOrEmpty(value))
                 {
+                    lb_SearchResults.DataSource = null;
+
                     SourceSystem newSource = new SourceSystem { Name = value };
                     await engine.AddSourceSystem(newSource);
                     await PopulateSourceSystems();
+
+                    // refocus on newly created item
+                    lb_SourceSystemList.ClearSelected();
+                    var newSS = SourceSystemCollection.Where(system => system.Name == value).FirstOrDefault();
+                    var index = SourceSystemCollection.IndexOf(newSS);
+                    lb_SourceSystemList.SelectedIndex = index;
                 }
             }
         }
@@ -114,6 +123,8 @@ namespace FrontEnd
         private async void btn_DeleteSource_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItem == null) return;
+
+            lb_SearchResults.DataSource = null;
 
             SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
             await engine.RemoveSourceSystem(SelectedSourceSystem);
@@ -124,53 +135,28 @@ namespace FrontEnd
         private async void btn_UpdateSource_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItem == null) return;
-            
+
+            lb_SearchResults.DataSource = null;
+
             engine.ResetOldSearch();
 
             SelectedSourceSystem = lb_SourceSystemList.SelectedItem as SourceSystem;
             await engine.UpdateSourceSystem(SelectedSourceSystem);
         }
 
-        private void lb_SourceSystemList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lb_SourceSystemList.SelectedItem == null)
-            {
-                SelectedSourceSystem = null;
-                return;
-            }
-
-            if (lb_SourceSystemList.SelectedItem != SelectedSourceSystem)
-            {
-                EnableSourceModifierButtons(false);
-            }
-        }
-
-        private async void lb_SearchResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lb_SearchResults.SelectedIndex < 0)
-            {
-                tb_SearchResults_SelectedLine.Text = "";
-                return;
-            }
-
-            var selectedLine = (LogLine)lb_SearchResults.SelectedItem;
-            tb_SearchResults_SelectedLine.Text = selectedLine.Rawtext;
-
-            await DisplaySelectedLineSourceSystem();
-        }
-
         private async void btn_ExecuteSearch_Click(object sender, EventArgs e)
         {
             if (lb_SourceSystemList.SelectedItems.Count < 1) return;
+
+            // Ensure result-list is cleared
+            lb_SearchResults.DataSource = null;
 
             var search = BuildSearchSet();
 
             // Display "Searching.." in UI
             lbl_SearchResults.Text = "Søger ...";
             tb_SearchResults_SelectedLine.Text = "";
-
-            // Ensure result-list is cleared
-            lb_SearchResults.DataSource = null;
+            UpdateButtonState();
 
             if (!string.IsNullOrEmpty(search.KeyWordList))
             {
@@ -185,8 +171,8 @@ namespace FrontEnd
             lbl_SearchResults.Text = $"Resultater ({SearchResults.Count})";
             lb_SearchResults.DataSource = SearchResults;
             lb_SearchResults.DisplayMember = "EventDescription";
+            UpdateButtonState();
         }
-
 
         private async void btn_OpenLogFile_Click(object sender, EventArgs e)
         {
@@ -195,22 +181,53 @@ namespace FrontEnd
         }
         #endregion
 
+        #region listbox event-handlers
+        private void lb_SourceSystemList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tb_SourceFocus_Directory.Text = "";
+            SelectedSourceSystem = null;
+
+            UpdateButtonState();
+        }
+
+        private async void lb_SearchResults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lb_SearchResults.SelectedIndex < 0)
+            {
+                tb_SearchResults_SelectedLine.Text = "";
+                return;
+            }
+
+            var selectedLine = (LogLine)lb_SearchResults.SelectedItem;
+            tb_SearchResults_SelectedLine.Text = selectedLine.Rawtext;
+
+            await DisplaySelectedLine();
+            UpdateButtonState();
+        }
+        #endregion
+
         #region helpers
-        private void EnableSourceModifierButtons(bool enable)
+        private void UpdateButtonState()
         {
-            btn_DeleteSource.Enabled = enable;
-            btn_SourceFocus_Browse.Enabled = enable;
-            btn_UpdateSource.Enabled = enable;
-            btn_SourceFocus_DirectorySave.Enabled = enable;
-            gb_Search.Enabled = enable;
+            var uiEnable = engine.UiEnable;
+            var ss_UserHasSelected = SelectedSourceSystem != null;
+            var ss_ItemSelected = lb_SourceSystemList.SelectedItem != null;
+            var results_ItemSelected = lb_SearchResults.SelectedItem != null;
+
+            btn_SelectSource.Enabled = ss_ItemSelected && uiEnable;
+            btn_AddNewSource.Enabled = uiEnable;
+            btn_DeleteSource.Enabled = ss_ItemSelected && ss_UserHasSelected && uiEnable;
+            btn_UpdateSource.Enabled = ss_ItemSelected && ss_UserHasSelected && uiEnable;
+
+            btn_ExecuteSearch.Enabled = ss_ItemSelected && ss_UserHasSelected && uiEnable;
+            btn_OpenLogFile.Enabled = results_ItemSelected;
+
+            btn_SourceFocus_DirectorySave.Enabled = string.IsNullOrEmpty(tb_SourceFocus_Directory.Text);
+
+            if (!results_ItemSelected) lbl_SearchResults_SelectedLine.Text = "";
         }
 
-        private void EnableOpenLogFileButton(bool enable)
-        {
-            btn_OpenLogFile.Enabled = enable;
-        }
-
-        private async Task DisplaySelectedLineSourceSystem()
+        private async Task DisplaySelectedLine()
         {
             if (lb_SearchResults.SelectedItem == null) 
             {

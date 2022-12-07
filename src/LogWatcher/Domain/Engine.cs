@@ -18,6 +18,10 @@ namespace Domain
 
         public SearchSet OldSearch { get; private set; }
 
+        public bool UiEnable { get; private set; } = true;
+
+        public event EventHandler<UIEventArg> UIEvent;
+
         public Engine(SqlConnect sqlConnect, FileLoader fileLoader, Connector connector)
         {
             this.sqlConnect = sqlConnect;
@@ -32,8 +36,7 @@ namespace Domain
         /// </summary>
         public async Task<List<SourceSystem>> GetAllSourceSystems()
         {
-            var ssList = new List<SourceSystem>();
-            ssList = await sqlConnect.GetAllSourceSystems();
+            var ssList = await sqlConnect.GetAllSourceSystems();
             return ssList;
         }
 
@@ -42,10 +45,15 @@ namespace Domain
         /// </summary>
         public async Task<SourceSystem> AddSourceSystem(SourceSystem sourceSystem)
         {
+            UiEnable = false;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
+            
             // insert new system into db
             var newRecord = await sqlConnect.CreateSourceSystem(sourceSystem);            
             await UpdateFilesFromSourceSystem(newRecord);
 
+            UiEnable = true;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
             return newRecord;
         }
 
@@ -54,6 +62,9 @@ namespace Domain
         /// </summary>
         public async Task RemoveSourceSystem(SourceSystem sourceSystem)
         {
+            UiEnable = false;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
+
             // first get loglines to remove from DB
             var linesToDelete = await GetFilesInDB(sourceSystem);
 
@@ -62,6 +73,9 @@ namespace Domain
 
             // then remove sourceSystem
             await sqlConnect.DeleteSourceSystem(sourceSystem);
+
+            UiEnable = true;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
         }
 
         /// <summary>
@@ -69,9 +83,14 @@ namespace Domain
         /// </summary>
         public async Task UpdateSourceSystem(SourceSystem sourceSystem)
         {
-            var updated = await sqlConnect.UpdateSourceSystem(sourceSystem);
+            UiEnable = false;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
 
+            var updated = await sqlConnect.UpdateSourceSystem(sourceSystem);
             await UpdateFilesFromSourceSystem(updated);
+
+            UiEnable = true;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
         }
 
         /// <summary>
@@ -79,6 +98,9 @@ namespace Domain
         /// </summary>
         public async Task UpdateFilesFromSourceSystem(SourceSystem sourceSystem)
         {
+            UiEnable = false;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
+
             // get list of all files in sourceDir
             var filesInDir = await GetFilesInDirectory(sourceSystem.SourceFolder);
 
@@ -101,7 +123,10 @@ namespace Domain
             {
                 await AddLogFileToDB(sourceSystem, Path.GetFileName(file));
             });
-            await Task.WhenAll(addFilesTasks);            
+            await Task.WhenAll(addFilesTasks);
+
+            UiEnable = true;
+            UIEvent?.Invoke(this, new UIEventArg { BackEndBusy = UiEnable });
         }
 
         /// <summary>

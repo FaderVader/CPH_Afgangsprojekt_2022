@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace Domain.API
 {
     public class Connector
-    {
-        // ref: https://www.dotnetfunda.com/articles/show/2341/crud-operation-using-web-api-and-windows-application
+    {        
         private const string uri = "http://localhost:8000";
 
         public async Task<string> SendSearch(SearchSet searchSet, string endpoint = "search")
