@@ -1,9 +1,6 @@
 from Types import LogLine
 from Types import SearchSet
 from Database import Database
-from os import listdir
-from datetime import datetime, timezone
-
 
 class Loader:
     def __init__(self, searchSet:SearchSet): 

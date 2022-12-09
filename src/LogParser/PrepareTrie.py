@@ -7,8 +7,7 @@ from Types import SearchSet
 class PrepareTrie:
     def __init__(self, searchSet:SearchSet):
         loader = Loader(searchSet)
-        self.fileStructure = loader.GetStructuredLogs() #TODO do we need both references ?
-        self.all_files = loader.GetStructuredLogs() #TODO
+        self.fileStructure = loader.GetStructuredLogs() 
         self.log_trie = None
 
     def buildTrie(self):
@@ -19,7 +18,7 @@ class PrepareTrie:
         trie = LogTrie()
         for client in self.fileStructure:
             for log in self.fileStructure[client]:
-                log_file = self.all_files[client][log]
+                log_file = self.fileStructure[client][log]
                 terminator = Terminator(client, log, None, None)
                 trie.AddLog(log_file, terminator)
         self.log_trie = trie
@@ -36,4 +35,4 @@ class PrepareTrie:
         """
         Get all logs as structured object: [client][file][linenumber]
         """
-        return self.all_files
+        return self.fileStructure
