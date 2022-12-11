@@ -1,4 +1,4 @@
-## Afgangsprojekt Jakob Viggo Hansen ##
+## Afgangsprojekt Jakob Viggo Hansen - 2022 ##
 #### Akademiuddannelsen i InformationsTeknologi #### 
 <br/>
 Dette repository indeholder mit afgangprojekt for uddannelsen.<br/>
