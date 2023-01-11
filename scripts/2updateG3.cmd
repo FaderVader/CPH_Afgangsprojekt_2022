@@ -1,0 +1,1 @@
+XCOPY ..\DemoData\logs4\*.log ..\DemoData\logs3
