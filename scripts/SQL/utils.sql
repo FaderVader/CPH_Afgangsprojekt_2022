@@ -31,3 +31,5 @@ SELECT * FROM LogLines WHERE SourceSystemID = 10 AND TimeOfEvent BETWEEN '10-12-
 SELECT * FROM LogLines WHERE SourceSystemID = 10 and LogFileID = 15  AND TimeOfEvent BETWEEN '2020-09-04 18:16:00' AND '2020-09-04 18:20:00';
 
 SELECT * FROM LogLines WHERE LEN(RawText) < 101;
+SELECT * FROM LogLines ORDER BY LogFileID;
+SELECT * FROM LogLines WHERE SourceSystemID = 5 ORDER BY TimeOfEvent;

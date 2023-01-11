@@ -1,4 +1,4 @@
-USE [master];
+/*USE [master];
 GO
 
 IF (DB_ID('LogStore') IS NOT NULL)
@@ -11,7 +11,7 @@ IF (DB_ID('LogStore') IS NULL)
 	BEGIN
 		CREATE DATABASE [LogStore]
 	END;
-GO
+GO*/
 
 USE [LogStore];
 
