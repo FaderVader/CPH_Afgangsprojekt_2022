@@ -101,7 +101,7 @@ namespace FrontEnd
         private async void btn_AddNewSource_Click(object sender, EventArgs e)
         {
             string value = "";
-            if (InputBox("Navngiv nyt kildesystem", "Skriv et nyt navn", ref value) == DialogResult.OK)
+            if (InputBox("Navngiv nyt kildesystem", "Anfør systemets navn:", ref value) == DialogResult.OK)
             {
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -257,13 +257,13 @@ namespace FrontEnd
             buttonOK.DialogResult = DialogResult.OK;
             buttonCancel.DialogResult = DialogResult.Cancel;
 
-            label.SetBounds(36, 36, 372, 13);
-            textBox.SetBounds(36, 86, 700, 20);
-            buttonOK.SetBounds(228, 160, 160, 60);
-            buttonCancel.SetBounds(400, 160, 160, 60);
+            label.SetBounds(28, 20, 172, 13);
+            textBox.SetBounds(28, 40, 300, 20);
+            buttonOK.SetBounds(35, 100, 120, 60);
+            buttonCancel.SetBounds(190, 100, 120, 60);
 
             label.AutoSize = true;
-            form.ClientSize = new Size(796, 307);
+            form.ClientSize = new Size(350, 210);
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.StartPosition = FormStartPosition.CenterScreen;
             form.MinimizeBox = false;
